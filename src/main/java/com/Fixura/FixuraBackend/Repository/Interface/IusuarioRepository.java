@@ -5,4 +5,5 @@ import com.Fixura.FixuraBackend.Model.Usuario;
 public interface IusuarioRepository {
   public int save(Usuario usuario);
   public Usuario login(Usuario usuario);
+  public Usuario profile(String UserDni);
 }

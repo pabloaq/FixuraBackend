@@ -7,11 +7,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Fixura.FixuraBackend.Model.AuthResponse;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
 import com.Fixura.FixuraBackend.Model.Usuario;
 import com.Fixura.FixuraBackend.Repository.Interface.IusuarioRepository;
+import com.Fixura.FixuraBackend.Service.Interface.IusuarioService;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -20,6 +24,9 @@ public class UsuarioController {
   
   @Autowired
   private IusuarioRepository iusuarioRepository;
+
+  @Autowired
+  private IusuarioService iusuarioServicey;
 
   @PostMapping(value="/save")
   public ResponseEntity<ServiceResponse> save(
@@ -39,14 +46,28 @@ public class UsuarioController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<Usuario> login(@RequestBody Usuario usuario) {
-      var user = iusuarioRepository.login(usuario);
+  public ResponseEntity<?> login(@RequestBody Usuario usuario) {
+    
+    try {
+      AuthResponse authResponse = iusuarioServicey.login(usuario);
+      return ResponseEntity.ok(authResponse);
+    } catch (Exception e) {
+        return new ResponseEntity<>("Error al iniciar sesión", HttpStatus.UNAUTHORIZED);
+    }
+  }
 
-      if (user != null && user.getContrasenia().equals(usuario.getContrasenia())) {
-        return new ResponseEntity<>(user, HttpStatus.OK);
-      } else {
-          return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-      }
+  @PostMapping("/profile")
+  public ResponseEntity<Usuario> getUserProfile(@RequestHeader("Authorization") String token) {
+    try {
+
+      String jwtToken = token.substring(7); //Extraer el token del encabezado, ignorando "Bearer "
+      //Nota: si se quiere probar este endpoint desde postman. Pasar el token directo a iusuarioServicey.profile(token),
+      Usuario userData = iusuarioServicey.profile(jwtToken);
+      return new ResponseEntity<>(userData, HttpStatus.OK);
+      
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
   
 }
