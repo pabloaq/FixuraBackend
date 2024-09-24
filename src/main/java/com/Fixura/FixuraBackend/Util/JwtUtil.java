@@ -6,6 +6,8 @@ import java.util.Map;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.Fixura.FixuraBackend.Model.Usuario;
@@ -13,7 +15,8 @@ import com.Fixura.FixuraBackend.Model.Usuario;
 @Component
 public class JwtUtil {
 
-    private String SECRET_KEY = "FDKOoIzN85UttqixVC6eCmI+lT1mgDjtnV8D0CfloY4=";
+    @Value("${jwt.secret}")
+    private String SECRET_KEY; //32 bytes
 
     public String generateToken(Usuario user) {
         Map<String, Object> headers = new HashMap<>();
