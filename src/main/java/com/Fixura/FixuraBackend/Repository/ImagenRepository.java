@@ -1,5 +1,6 @@
 package com.Fixura.FixuraBackend.Repository;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,7 +15,8 @@ import com.Fixura.FixuraBackend.Repository.Interface.IimagenRepository;
 @Repository
 public class ImagenRepository implements IimagenRepository{
     private static final String GITHUB_API_URL = "https://api.github.com/repos/KevinGM02/Galeria-Imagenes-Fixura/contents/imagenes";
-    private static final String GITHUB_TOKEN = "token";
+    @Value("${github.secret}")
+    private String GITHUB_TOKEN;
     //private static final String REPO_OWNER = "KevinGM02";
     //private static final String REPO_NAME = "Galeria-Imagenes-Fixura";
     private static final String BRANCH = "main";

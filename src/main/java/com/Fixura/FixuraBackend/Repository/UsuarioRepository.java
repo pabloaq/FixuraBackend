@@ -33,7 +33,14 @@ public class UsuarioRepository implements IusuarioRepository{
 
   @Override
   public Usuario login(Usuario usuario) {
-    String SQL = "SELECT * FROM Usuario WHERE correo = '" + usuario.getCorreo() + "' AND contrasenia = '" + usuario.getContrasenia() + "'";
+    String SQL = "SELECT * FROM Usuarios WHERE correo = '" + usuario.getCorreo() + "' AND contrasenia = '" + usuario.getContrasenia() + "'";
+    List<Usuario> users = jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(Usuario.class));
+    return users.isEmpty() ? null : users.get(0);
+  }
+
+  @Override
+  public Usuario profile(String UserDni) {
+    String SQL = "SELECT * FROM Usuarios WHERE DNI = '" + UserDni + "'";
     List<Usuario> users = jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(Usuario.class));
     return users.isEmpty() ? null : users.get(0);
   }
