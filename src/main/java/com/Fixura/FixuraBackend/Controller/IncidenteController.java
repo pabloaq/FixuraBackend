@@ -25,7 +25,7 @@ import java.text.ParseException;
 
 @RestController
 @RequestMapping("/api/incidente")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class IncidenteController {
 
     @Autowired
