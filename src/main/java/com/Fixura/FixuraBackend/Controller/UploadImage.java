@@ -19,7 +19,7 @@ import com.Fixura.FixuraBackend.Repository.Interface.IimagenRepository;
 
 @RestController
 @RequestMapping("/api/v1/upload")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UploadImage {
 
     @Autowired
