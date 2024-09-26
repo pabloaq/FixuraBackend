@@ -4,7 +4,7 @@ import com.Fixura.FixuraBackend.Model.AuthResponse;
 import com.Fixura.FixuraBackend.Model.Usuario;
 
 public interface IusuarioService {
-  public int save(Usuario usuario);
-  public AuthResponse login(Usuario usuario);
+  public int register(Usuario usuario);
+  public AuthResponse login(Usuario user);
   public Usuario profile(String token);
 }

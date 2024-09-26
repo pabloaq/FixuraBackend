@@ -3,6 +3,7 @@ package com.Fixura.FixuraBackend.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,14 +29,20 @@ public class UsuarioController {
   @Autowired
   private IusuarioService iusuarioServicey;
 
-  @PostMapping(value="/save")
-  public ResponseEntity<ServiceResponse> save(
+  
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
+  @PostMapping(value="/register")
+  public ResponseEntity<ServiceResponse> register(
     @RequestBody Usuario usuario
     ){
 
       ServiceResponse serviceResponse = new ServiceResponse();
       
-      int result = iusuarioRepository.save(usuario);
+      usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+
+      int result = iusuarioRepository.register(usuario);
       if (result == 1) {
         serviceResponse.setMenssage("Usuario registrado correctamente");
       } else {
@@ -46,10 +53,10 @@ public class UsuarioController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody Usuario usuario) {
+  public ResponseEntity<?> login(@RequestBody Usuario user) {
     
     try {
-      AuthResponse authResponse = iusuarioServicey.login(usuario);
+      AuthResponse authResponse = iusuarioServicey.login(user);
       return ResponseEntity.ok(authResponse);
     } catch (Exception e) {
         return new ResponseEntity<>("Error al iniciar sesión", HttpStatus.UNAUTHORIZED);
@@ -60,7 +67,8 @@ public class UsuarioController {
   public ResponseEntity<Usuario> getUserProfile(@RequestHeader("Authorization") String token) {
     try {
 
-      String jwtToken = token.substring(7); //Extraer el token del encabezado, ignorando "Bearer "
+      String jwtToken = token.substring(7); 
+      //Extraer el token del encabezado, ignorando "Bearer "
       //Nota: si se quiere probar este endpoint desde postman. Pasar el token directo a iusuarioServicey.profile(token),
       Usuario userData = iusuarioServicey.profile(jwtToken);
       return new ResponseEntity<>(userData, HttpStatus.OK);
