@@ -1,6 +1,7 @@
 package com.Fixura.FixuraBackend.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.Fixura.FixuraBackend.Model.AuthResponse;
@@ -18,11 +19,14 @@ public class UsuarioService implements IusuarioService{
   @Autowired
   private JwtUtil jwtUtil;
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   @Override
-  public int save(Usuario usuario) {
+  public int register(Usuario usuario) {
     int row;
     try {
-      row = usuarioRepository.save(usuario);
+      row = usuarioRepository.register(usuario);
     } catch (Exception e) {
       throw e;
     }
@@ -31,13 +35,11 @@ public class UsuarioService implements IusuarioService{
 
   @Override
   public AuthResponse login(Usuario user) {
-    Usuario userData;
-
     try {
 
-      userData = usuarioRepository.login(user);
+      Usuario userData = usuarioRepository.login(user.getCorreo());
       
-      if (userData != null && userData.getContrasenia().equals(user.getContrasenia())) {
+      if (userData != null && passwordEncoder.matches(user.getContrasenia(), userData.getContrasenia())) {
         String token = jwtUtil.generateToken(userData);
         return new AuthResponse(token);
       } else throw new RuntimeException("Credenciales inválidas");

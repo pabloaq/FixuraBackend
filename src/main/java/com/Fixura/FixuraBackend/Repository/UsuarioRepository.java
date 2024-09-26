@@ -1,7 +1,6 @@
 package com.Fixura.FixuraBackend.Repository;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +16,7 @@ public class UsuarioRepository implements IusuarioRepository{
   private JdbcTemplate jdbcTemplate;
 
   @Override
-  public int save(Usuario usuario) {
+  public int register(Usuario usuario) {
     String SQL = "INSERT INTO Usuarios (DNI, nombre, correo, contrasenia, foto_perfil, tiempo_ban, id_rol, id_distrito) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     return jdbcTemplate.update(SQL, new Object[]{
       usuario.getDNI(),
@@ -32,8 +31,8 @@ public class UsuarioRepository implements IusuarioRepository{
   }
 
   @Override
-  public Usuario login(Usuario usuario) {
-    String SQL = "SELECT * FROM Usuarios WHERE correo = '" + usuario.getCorreo() + "' AND contrasenia = '" + usuario.getContrasenia() + "'";
+  public Usuario login(String correo) {
+    String SQL = "SELECT * FROM Usuarios WHERE correo = '" + correo + "'";
     List<Usuario> users = jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(Usuario.class));
     return users.isEmpty() ? null : users.get(0);
   }
@@ -44,4 +43,5 @@ public class UsuarioRepository implements IusuarioRepository{
     List<Usuario> users = jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(Usuario.class));
     return users.isEmpty() ? null : users.get(0);
   }
+
 }
