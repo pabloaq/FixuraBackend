@@ -69,7 +69,6 @@ public class UsuarioController {
 
       String jwtToken = token.substring(7); 
       //Extraer el token del encabezado, ignorando "Bearer "
-      //Nota: si se quiere probar este endpoint desde postman. Pasar el token directo a iusuarioServicey.profile(token),
       Usuario userData = iusuarioServicey.profile(jwtToken);
       return new ResponseEntity<>(userData, HttpStatus.OK);
       
