@@ -12,21 +12,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 public class SecurityConfig {
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors()
-            .and()
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+
+                // Endpoints permitidos para todos los usuarios
                 .requestMatchers("/api/usuario/login", "/api/usuario/register").permitAll()
+
+                // Endpoints permitidos para usuarios con rol ADMINISTRADOS
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                // Endpoints permitidos para usuarios con rol MODERADOR
+                .requestMatchers("/api/moderator/**").hasRole("MODERATOR")
+
+                // Permitir el acceso para cualquier usuario autenticado
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
