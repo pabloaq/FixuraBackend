@@ -5,7 +5,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.Fixura.FixuraBackend.Model.AuthResponse;
-import com.Fixura.FixuraBackend.Model.ServiceResponse;
 import com.Fixura.FixuraBackend.Model.Usuario;
 import com.Fixura.FixuraBackend.Repository.UsuarioRepository;
 import com.Fixura.FixuraBackend.Service.Interface.IusuarioService;
@@ -24,31 +23,18 @@ public class UsuarioService implements IusuarioService{
   private PasswordEncoder passwordEncoder;
 
   @Override
-  public ServiceResponse register(Usuario usuario) {
-    
-    ServiceResponse serviceResponse = new ServiceResponse();
-
-    if(usuarioRepository.checkEmailExist(usuario.getCorreo())){
-      serviceResponse.setMenssage("Correo ya registrado, pruebe uno diferente");
-      return serviceResponse;
-    }
-
-    usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
-    
-    try {
-      int result = usuarioRepository.register(usuario);
-
-      if(result == 1){
-        serviceResponse.setMenssage("Usuario registrado correctamente");
-      }else{
-        serviceResponse.setMenssage("Error al registrar el usuario");
+  public int register(Usuario usuario) {
+      if(usuarioRepository.checkEmailExist(usuario.getCorreo())){
+        return 0;
       }
-
-    } catch (Exception e) {
-      throw e;
-    }
-
-    return serviceResponse;
+  
+      usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+      
+      try {
+        return usuarioRepository.register(usuario);
+      } catch (Exception e) {
+        throw new RuntimeException("Error al registrar el usuario", e);
+      }
   }
 
   @Override

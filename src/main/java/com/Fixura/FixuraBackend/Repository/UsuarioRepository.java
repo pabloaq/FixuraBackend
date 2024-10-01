@@ -46,9 +46,9 @@ public class UsuarioRepository implements IusuarioRepository{
 
   @Override
   public boolean checkEmailExist(String correo) {
-    String SQL = "SELECT * FROM Usuarios WHERE correo = ?";
-    int count  = jdbcTemplate.queryForObject(SQL, Integer.class, correo);
-    return count > 0;
+      String SQL = "SELECT COUNT(*) FROM Usuarios WHERE correo = ?";
+      int count = jdbcTemplate.queryForObject(SQL, Integer.class, correo);
+      return count > 0;
   }
 
 }

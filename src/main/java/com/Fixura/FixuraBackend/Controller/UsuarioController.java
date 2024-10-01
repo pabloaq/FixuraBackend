@@ -24,10 +24,29 @@ public class UsuarioController {
   @Autowired
   private IusuarioService iusuarioServicey;
 
+
   @PostMapping(value="/register")
-  public ResponseEntity<ServiceResponse> register(@RequestBody Usuario usuario){
-      ServiceResponse serviceResponse = new ServiceResponse();
-      return new ResponseEntity<>(serviceResponse, HttpStatus.OK);
+  public ResponseEntity<?> register(@RequestBody Usuario usuario){
+
+    ServiceResponse response = new ServiceResponse();
+
+    try{
+        int result = iusuarioServicey.register(usuario);
+
+        if(result != 0){
+          response.setSuccess(true);
+          response.setMenssage("Registro exitoso");
+          return new ResponseEntity<>(response, HttpStatus.OK);
+        }else{
+          response.setSuccess(false);
+          response.setMenssage("El correo electrónico ya existe");
+          return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }catch (Exception e) {
+      response.setSuccess(false);
+      response.setMenssage("Error al registrarse");
+      return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @PostMapping("/login")
