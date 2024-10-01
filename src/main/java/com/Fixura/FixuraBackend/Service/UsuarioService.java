@@ -24,25 +24,31 @@ public class UsuarioService implements IusuarioService{
   private PasswordEncoder passwordEncoder;
 
   @Override
-  public int register(Usuario usuario) {
+  public ServiceResponse register(Usuario usuario) {
+    
     ServiceResponse serviceResponse = new ServiceResponse();
+
+    if(usuarioRepository.checkEmailExist(usuario.getCorreo())){
+      serviceResponse.setMenssage("Correo ya registrado, pruebe uno diferente");
+      return serviceResponse;
+    }
 
     usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
     
-    int result;
     try {
-      result = usuarioRepository.register(usuario);
+      int result = usuarioRepository.register(usuario);
 
-      if (result == 1) {
+      if(result == 1){
         serviceResponse.setMenssage("Usuario registrado correctamente");
-      } else {
+      }else{
         serviceResponse.setMenssage("Error al registrar el usuario");
       }
-      
+
     } catch (Exception e) {
       throw e;
     }
-    return result;
+
+    return serviceResponse;
   }
 
   @Override
