@@ -3,7 +3,6 @@ package com.Fixura.FixuraBackend.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Fixura.FixuraBackend.Model.AuthResponse;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
 import com.Fixura.FixuraBackend.Model.Usuario;
-import com.Fixura.FixuraBackend.Repository.Interface.IusuarioRepository;
 import com.Fixura.FixuraBackend.Service.Interface.IusuarioService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,32 +22,31 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public class UsuarioController {
   
   @Autowired
-  private IusuarioRepository iusuarioRepository;
-
-  @Autowired
   private IusuarioService iusuarioServicey;
 
-  
-  @Autowired
-  private PasswordEncoder passwordEncoder;
 
   @PostMapping(value="/register")
-  public ResponseEntity<ServiceResponse> register(
-    @RequestBody Usuario usuario
-    ){
+  public ResponseEntity<?> register(@RequestBody Usuario usuario){
 
-      ServiceResponse serviceResponse = new ServiceResponse();
-      
-      usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+    ServiceResponse response = new ServiceResponse();
 
-      int result = iusuarioRepository.register(usuario);
-      if (result == 1) {
-        serviceResponse.setMenssage("Usuario registrado correctamente");
-      } else {
-        serviceResponse.setMenssage("Error al registrar el usuario");
-      }
+    try{
+        int result = iusuarioServicey.register(usuario);
 
-      return new ResponseEntity<>(serviceResponse, HttpStatus.OK);
+        if(result != 0){
+          response.setSuccess(true);
+          response.setMenssage("Registro exitoso");
+          return new ResponseEntity<>(response, HttpStatus.OK);
+        }else{
+          response.setSuccess(false);
+          response.setMenssage("El correo electrónico ya existe");
+          return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }catch (Exception e) {
+      response.setSuccess(false);
+      response.setMenssage("Error al registrarse");
+      return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @PostMapping("/login")

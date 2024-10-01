@@ -24,13 +24,17 @@ public class UsuarioService implements IusuarioService{
 
   @Override
   public int register(Usuario usuario) {
-    int row;
-    try {
-      row = usuarioRepository.register(usuario);
-    } catch (Exception e) {
-      throw e;
-    }
-    return row;
+      if(usuarioRepository.checkEmailExist(usuario.getCorreo())){
+        return 0;
+      }
+  
+      usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+      
+      try {
+        return usuarioRepository.register(usuario);
+      } catch (Exception e) {
+        throw new RuntimeException("Error al registrar el usuario", e);
+      }
   }
 
   @Override

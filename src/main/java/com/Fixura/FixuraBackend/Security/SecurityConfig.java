@@ -21,32 +21,34 @@ public class SecurityConfig {
 
     @SuppressWarnings("removal")
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
         .cors()
         .and()
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
 
-                // Endpoints permitidos para todos los usuarios
-                .requestMatchers("/api/usuario/login", "/api/usuario/register").permitAll()
+            // Endpoints permitidos para todos los usuarios
+            .requestMatchers("/api/usuario/login", "/api/usuario/register").permitAll()
 
-                // Endpoints permitidos para usuarios con rol ADMINISTRADOS
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            .requestMatchers("/api/v1/departamento/**").permitAll()
 
-                // Endpoints permitidos para usuarios con rol MODERADOR
-                .requestMatchers("/api/moderator/**").hasRole("MODERATOR")
+            // Endpoints permitidos para usuarios con rol ADMINISTRADOS
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                // Permitir el acceso para cualquier usuario autenticado
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );
+            // Endpoints permitidos para usuarios con rol MODERADOR
+            .requestMatchers("/api/moderator/**").hasRole("MODERATOR")
 
-        return http.build();
-    }
+            // Permitir el acceso para cualquier usuario autenticado
+            .anyRequest().authenticated()
+        )
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
+
+    return http.build();
+}
 
     @Bean
     public PasswordEncoder passwordEncoder(){

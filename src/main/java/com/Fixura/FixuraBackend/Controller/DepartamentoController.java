@@ -37,7 +37,7 @@ public class DepartamentoController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-  @GetMapping("/{id_prov}/distritos")
+  @GetMapping("/{id_depart}/provincia/{id_prov}/distritos")
   public ResponseEntity<List<Distrito>> listDistritosPorProvinciaYDepartamento(
     @PathVariable Integer id_prov
     ){
