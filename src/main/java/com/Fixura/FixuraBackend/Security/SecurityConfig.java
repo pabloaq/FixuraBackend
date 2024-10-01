@@ -19,6 +19,7 @@ public class SecurityConfig {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
+    @SuppressWarnings("removal")
     @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
