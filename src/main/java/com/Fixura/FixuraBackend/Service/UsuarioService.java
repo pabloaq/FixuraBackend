@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.Fixura.FixuraBackend.Model.AuthResponse;
+import com.Fixura.FixuraBackend.Model.ServiceResponse;
 import com.Fixura.FixuraBackend.Model.Usuario;
 import com.Fixura.FixuraBackend.Repository.UsuarioRepository;
 import com.Fixura.FixuraBackend.Service.Interface.IusuarioService;
@@ -24,13 +25,24 @@ public class UsuarioService implements IusuarioService{
 
   @Override
   public int register(Usuario usuario) {
-    int row;
+    ServiceResponse serviceResponse = new ServiceResponse();
+
+    usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+    
+    int result;
     try {
-      row = usuarioRepository.register(usuario);
+      result = usuarioRepository.register(usuario);
+
+      if (result == 1) {
+        serviceResponse.setMenssage("Usuario registrado correctamente");
+      } else {
+        serviceResponse.setMenssage("Error al registrar el usuario");
+      }
+      
     } catch (Exception e) {
       throw e;
     }
-    return row;
+    return result;
   }
 
   @Override

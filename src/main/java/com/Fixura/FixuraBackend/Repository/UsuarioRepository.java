@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.Fixura.FixuraBackend.Model.Usuario;
@@ -42,6 +43,13 @@ public class UsuarioRepository implements IusuarioRepository{
     String SQL = "SELECT * FROM Usuarios WHERE DNI = '" + UserDni + "'";
     List<Usuario> users = jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(Usuario.class));
     return users.isEmpty() ? null : users.get(0);
+  }
+
+  @Override
+  public boolean checkEmailExist(String correo) {
+    String SQL = "SELECT * FROM Usuarios WHERE correo = ?";
+    int count  = jdbcTemplate.queryForObject(SQL, Integer.class, correo);
+    return count > 0;
   }
 
 }

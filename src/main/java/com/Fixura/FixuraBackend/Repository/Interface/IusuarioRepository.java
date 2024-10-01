@@ -6,4 +6,5 @@ public interface IusuarioRepository {
   public int register(Usuario usuario);
   public Usuario login(String correo);
   public Usuario profile(String UserDni);
+  public boolean checkEmailExist(String correo);
 }
