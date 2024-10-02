@@ -64,9 +64,8 @@ public class UsuarioController {
   public ResponseEntity<Usuario> getUserProfile(@RequestHeader("Authorization") String token) {
     try {
 
-      String jwtToken = token.substring(7); 
-      //Extraer el token del encabezado, ignorando "Bearer "
-      Usuario userData = iusuarioServicey.profile(jwtToken);
+      
+      Usuario userData = iusuarioServicey.profile(token);
       return new ResponseEntity<>(userData, HttpStatus.OK);
       
     } catch (Exception e) {

@@ -35,19 +35,23 @@ public class JwtUtil {
     }
 
     public String extractUserEmail(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+        String jwtToken = token.substring(7); //Extraer el token del encabezado, ignorando "Bearer "
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody().getSubject();
     }
 
     public String extractUserDni(String token) {
-        return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().get("dni");
+        String jwtToken = token.substring(7); //Extraer el token del encabezado, ignorando "Bearer "
+        return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody().get("dni");
     }
 
     public String extractUserIdRol(String token) {
-        return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().get("id_rol");
+        String jwtToken = token.substring(7); //Extraer el token del encabezado, ignorando "Bearer "
+        return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody().get("id_rol");
     }
 
     public boolean isTokenExpired(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getExpiration().before(new Date());
+        String jwtToken = token.substring(7); //Extraer el token del encabezado, ignorando "Bearer "
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody().getExpiration().before(new Date());
     }
 
 }
