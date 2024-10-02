@@ -42,13 +42,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     public String getRole(int idRol){
         switch (idRol) {
             case 1:
-                return "ROLE_ADMIN";
+                return "ADMIN";
             
             case 2:
-                return "ROLE_MODERATOR";
+                return "MODERATOR";
         
             case 3:
-                return "ROLE_USER";
+                return "USER";
             
         
             default:
