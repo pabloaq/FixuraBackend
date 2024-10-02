@@ -21,34 +21,37 @@ public class SecurityConfig {
 
     @SuppressWarnings("removal")
     @Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .cors()
-        .and()
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .cors()
+            .and()
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
 
-            // Endpoints permitidos para todos los usuarios
-            .requestMatchers("/api/usuario/login", "/api/usuario/register").permitAll()
+                // Endpoints permitidos para todos los usuarios
+                .requestMatchers("/api/usuario/login", "/api/usuario/register").permitAll()
 
-            .requestMatchers("/api/v1/departamento/**").permitAll()
+                .requestMatchers("/api/v1/departamento/**").permitAll()
 
-            // Endpoints permitidos para usuarios con rol ADMIN
-            .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                // Endpoints permitidos para usuarios con rol ADMIN
+                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
 
-            // Endpoints permitidos para usuarios con rol MODERADOR
-            .requestMatchers("/api/moderator/**").hasAuthority("MODERATOR")
-            
-            // Permitir el acceso para cualquier usuario autenticado
-            .anyRequest().authenticated()
-        )
-        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-        .sessionManagement(session -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
+                // Endpoints permitidos para usuarios con rol MODERADOR
+                .requestMatchers("/api/moderator/**").hasAuthority("MODERATOR")
 
-    return http.build();
-}
+                // Endpoints permitidos para usuarios con rol USER
+                .requestMatchers("/api/incidenteLike/**").hasAuthority("USER")
+                
+                // Permitir el acceso para cualquier usuario autenticado
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            );
+
+        return http.build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
