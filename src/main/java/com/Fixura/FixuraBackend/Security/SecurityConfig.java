@@ -33,12 +33,12 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
             .requestMatchers("/api/v1/departamento/**").permitAll()
 
-            // Endpoints permitidos para usuarios con rol ADMINISTRADOS
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            // Endpoints permitidos para usuarios con rol ADMIN
+            .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
 
             // Endpoints permitidos para usuarios con rol MODERADOR
-            .requestMatchers("/api/moderator/**").hasRole("MODERATOR")
-
+            .requestMatchers("/api/moderator/**").hasAuthority("MODERATOR")
+            
             // Permitir el acceso para cualquier usuario autenticado
             .anyRequest().authenticated()
         )
