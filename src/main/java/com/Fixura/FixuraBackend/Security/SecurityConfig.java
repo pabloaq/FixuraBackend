@@ -38,6 +38,9 @@ public class SecurityConfig {
 
                 // Endpoints permitidos para usuarios con rol MODERADOR
                 .requestMatchers("/api/moderator/**").hasAuthority("MODERATOR")
+
+                // Endpoints permitidos para usuarios con rol USER
+                .requestMatchers("/api/incidenteLike/**").hasAuthority("USER")
                 
                 // Permitir el acceso para cualquier usuario autenticado
                 .anyRequest().authenticated()
