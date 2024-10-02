@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,5 +119,20 @@ public class IncidenteController {
 		}
 		
 		return new ResponseEntity<>(serviceResponse,HttpStatus.OK);
+	}
+
+	@GetMapping("/totalVotos/{idIncidencia}")
+	public ResponseEntity<Integer> get_total_votos(
+		@RequestHeader("Authorization") String token,
+		@PathVariable int idIncidencia
+		) {
+
+		int num_votos = iincidenteService.get_total_votos(token, idIncidencia);
+
+		if (num_votos > -1) {
+			return new ResponseEntity<>(num_votos, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(-1, HttpStatus.NOT_FOUND);
+		}
 	}
 }

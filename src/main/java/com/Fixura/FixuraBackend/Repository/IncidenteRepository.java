@@ -67,4 +67,11 @@ public class IncidenteRepository implements IincidenteRepository{
 		return jdbcTemplate.update(sql, new Object[] {id});
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public int get_total_votos(int id_incidencia) {
+		String sql = "SELECT total_votos FROM Incidencia WHERE id_incidencia = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[] {id_incidencia}, Integer.class);
+	}
+
 }
