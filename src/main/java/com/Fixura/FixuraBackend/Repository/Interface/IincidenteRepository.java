@@ -8,4 +8,5 @@ public interface IincidenteRepository {
 	public int update_estado(Incidente incidente);
     public int update_categoria(Incidente incidente);
 	public int delete(int id);
+    public int get_total_votos(int id_incidencia);
 }

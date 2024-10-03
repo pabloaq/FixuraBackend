@@ -10,4 +10,5 @@ public interface IincidenteService {
 	public int update_estado(Incidente incidente);
     public int update_categoria(Incidente incidente);
 	public int delete(int id);
+    public int get_total_votos(String token, int id_incidencia);
 }

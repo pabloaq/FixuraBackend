@@ -18,13 +18,13 @@ public class IncidenteRepository implements IincidenteRepository{
 
     @Override
 	public List<Incidente> Listar_incidente_usuario(String dni) {
-		String sql = "select * from Incidencia where DNI='"+dni+"'";
+		String sql = "select * from Incidencia where DNI='"+dni+"' ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
 	}
 
     @Override
 	public List<Incidente> Listar_incidente_Municipalidad(String distrito) {
-		String sql = "select * from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito='"+distrito+"' ";
+		String sql = "select * from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito='"+distrito+"' ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
 	}
 
@@ -65,6 +65,13 @@ public class IncidenteRepository implements IincidenteRepository{
 	public int delete(int id) {
 		String sql = "DELETE Incidencia where id_incidencia=?";
 		return jdbcTemplate.update(sql, new Object[] {id});
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public int get_total_votos(int id_incidencia) {
+		String sql = "SELECT total_votos FROM Incidencia WHERE id_incidencia = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[] {id_incidencia}, Integer.class);
 	}
 
 }
