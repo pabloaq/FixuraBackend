@@ -18,13 +18,13 @@ public class IncidenteRepository implements IincidenteRepository{
 
     @Override
 	public List<Incidente> Listar_incidente_usuario(String dni) {
-		String sql = "select * from Incidencia where DNI='"+dni+"'";
+		String sql = "select * from Incidencia where DNI='"+dni+"' ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
 	}
 
     @Override
 	public List<Incidente> Listar_incidente_Municipalidad(String distrito) {
-		String sql = "select * from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito='"+distrito+"' ";
+		String sql = "select * from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito='"+distrito+"' ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
 	}
 
