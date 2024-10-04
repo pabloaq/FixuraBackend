@@ -96,4 +96,17 @@ public class IncidenteService implements IincidenteService{
 			throw new RuntimeException("Error al obtener total de votos de incidencia");
 		}
 	}
+
+	@Override
+	public String get_name_user(String token, int id_incidencia) {
+		try {
+			if (jwtUtil.isTokenExpired(token)) {
+				throw new RuntimeException("Token Expirado...");
+			}
+			String name_user = incidenteRepository.get_name_user(id_incidencia);
+			return name_user;
+		} catch (Exception ex) {
+			throw new RuntimeException("Error al obtener el NOMBRE DE USUARIO de la incidencia");
+		}
+	}
 }

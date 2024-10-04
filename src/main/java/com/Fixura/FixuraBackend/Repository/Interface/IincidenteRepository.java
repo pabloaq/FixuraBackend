@@ -9,4 +9,5 @@ public interface IincidenteRepository {
     public int update_categoria(Incidente incidente);
 	public int delete(int id);
     public int get_total_votos(int id_incidencia);
+    public String get_name_user(int id_incidencia);
 }

@@ -74,4 +74,16 @@ public class IncidenteRepository implements IincidenteRepository{
 		return jdbcTemplate.queryForObject(sql, new Object[] {id_incidencia}, Integer.class);
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public String get_name_user(int id_incidencia) {
+		String sql = """
+		SELECT us.nombre FROM Incidencia AS inc
+		INNER JOIN usuarios AS us ON us.dni = inc.dni
+		WHERE inc.id_incidencia = ?;
+		""";
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{id_incidencia}, String.class);
+	}
+
 }

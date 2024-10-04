@@ -135,4 +135,20 @@ public class IncidenteController {
 			return new ResponseEntity<>(-1, HttpStatus.NOT_FOUND);
 		}
 	}
+
+	@GetMapping("/name/usuario/{idIncidencia}")
+	public ResponseEntity<String> get_name_usuario(
+		@RequestHeader("Authorization") String token,
+		@PathVariable int idIncidencia
+		) {
+
+		String name_user = iincidenteService.get_name_user(token, idIncidencia);
+
+		if (name_user != null) {
+			return new ResponseEntity<>(name_user, HttpStatus.OK);
+		} else {
+			String message = "No se encontró un usuario asociado con la incidencia ID: " + idIncidencia;
+			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+		}
+	}
 }
