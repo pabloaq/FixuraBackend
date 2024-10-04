@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -111,16 +110,18 @@ public class IncidenteController {
 		return new ResponseEntity<>(serviceResponse,HttpStatus.OK);
 	}
 
-    @DeleteMapping("/delete/{id}")
-	public ResponseEntity<ServiceResponse> update(@PathVariable int id){
-		ServiceResponse serviceResponse = new ServiceResponse();
+    @PutMapping("/delete/{idIncidencia}")
+	public ResponseEntity<String> deleteIncidencia(
+		@RequestHeader("Authorization") String token,
+		@PathVariable int idIncidencia
+		){
+		boolean result = iincidenteService.delete(token, idIncidencia);
 
-		int result= iincidenteService.delete(id);
-		if(result==1) {
-			serviceResponse.setMenssage("El incidente se elimino correctamente.");
+		if (result) {
+			return ResponseEntity.ok("Incidente ELIMINADO correctamente");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR al eliminar Incidente");
 		}
-		
-		return new ResponseEntity<>(serviceResponse,HttpStatus.OK);
 	}
 
 	@GetMapping("/totalVotos/{idIncidencia}")

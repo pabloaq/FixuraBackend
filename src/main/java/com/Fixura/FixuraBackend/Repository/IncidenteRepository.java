@@ -62,9 +62,9 @@ public class IncidenteRepository implements IincidenteRepository{
 	}
 
 	@Override
-	public int delete(int id) {
-		String sql = "DELETE Incidencia where id_incidencia=?";
-		return jdbcTemplate.update(sql, new Object[] {id});
+	public boolean delete(int id_incidencia) {
+		String sql = "UPDATE Incidencia SET id_estado = 4 WHERE id_incidencia = ?;";
+		return jdbcTemplate.update(sql, new Object[] {id_incidencia}) > 0;
 	}
 
 	@SuppressWarnings("deprecation")

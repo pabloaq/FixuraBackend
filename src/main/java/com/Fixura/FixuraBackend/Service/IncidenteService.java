@@ -74,14 +74,15 @@ public class IncidenteService implements IincidenteService{
 	}
 
 	@Override
-	public int delete(int id) {
-		int row;
+	public boolean delete(String token, int id_incidencia) {
 		try {
-			row=incidenteRepository.delete(id);
+			if (jwtUtil.isTokenExpired(token)) {
+				throw new RuntimeException("Token Expirado...");
+			}
+			return incidenteRepository.delete(id_incidencia);
 		}catch (Exception ex) {
-			throw ex;
+			throw new RuntimeException("Error al Elimianr incidencia con ID: " + id_incidencia);
 		}
-		return row;
 	}
 
 	@Override
