@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+
 @RestController
 @RequestMapping("/api/usuario")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -40,7 +41,8 @@ public class UsuarioController {
         }else{
           response.setSuccess(false);
           response.setMenssage("El correo electrónico ya existe");
-          return new ResponseEntity<>(response, HttpStatus.OK);
+          System.out.println("El correo ya existe - Controller");
+          return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }catch (Exception e) {
       response.setSuccess(false);
@@ -72,5 +74,12 @@ public class UsuarioController {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  @PostMapping(value="/existEmail")
+  public ResponseEntity<Boolean> existEmail(@RequestBody String correo) {
+      boolean response = iusuarioServicey.checkEmail(correo);
+      return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+  
   
 }
