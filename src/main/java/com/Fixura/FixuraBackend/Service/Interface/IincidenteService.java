@@ -12,4 +12,5 @@ public interface IincidenteService {
 	public int delete(int id);
     public int get_total_votos(String token, int id_incidencia);
     public String get_name_user(String token, int id_incidencia);
+    public boolean update_incidente(String token, Incidente incidente);
 }

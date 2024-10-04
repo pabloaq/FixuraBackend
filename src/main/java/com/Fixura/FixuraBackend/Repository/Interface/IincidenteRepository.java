@@ -10,4 +10,5 @@ public interface IincidenteRepository {
 	public int delete(int id);
     public int get_total_votos(int id_incidencia);
     public String get_name_user(int id_incidencia);
+    public boolean update_incidente(Incidente incidente);
 }

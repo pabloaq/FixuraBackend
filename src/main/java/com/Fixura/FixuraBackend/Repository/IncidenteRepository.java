@@ -86,4 +86,19 @@ public class IncidenteRepository implements IincidenteRepository{
 		return jdbcTemplate.queryForObject(sql, new Object[]{id_incidencia}, String.class);
 	}
 
+	@Override
+	public boolean update_incidente(Incidente incidente) {
+		String sql = """
+		UPDATE Incidencia
+		SET id_estado = ?, id_categoria = ?, ubicacion = ?
+		WHERE id_incidencia = ?;
+		""";
+		return jdbcTemplate.update(sql,new Object[] {
+			incidente.getId_estado(),
+			incidente.getId_categoria(),
+			incidente.getUbicacion(),
+			incidente.getId_incidencia()
+		}) > 0;
+	}
+
 }

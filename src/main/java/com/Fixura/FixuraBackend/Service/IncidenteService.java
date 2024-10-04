@@ -109,4 +109,16 @@ public class IncidenteService implements IincidenteService{
 			throw new RuntimeException("Error al obtener el NOMBRE DE USUARIO de la incidencia");
 		}
 	}
+
+	@Override
+	public boolean update_incidente(String token, Incidente incidente) {
+		try {
+			if (jwtUtil.isTokenExpired(token)) {
+				throw new RuntimeException("Token Expirado...");
+			}
+			return incidenteRepository.update_incidente(incidente);
+		} catch (Exception ex) {
+			throw new RuntimeException("Error al Actualizar incidencia con ID: "+ incidente.getId_incidencia());
+		}
+	}
 }

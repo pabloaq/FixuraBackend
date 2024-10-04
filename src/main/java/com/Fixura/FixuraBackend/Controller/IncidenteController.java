@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -147,8 +149,22 @@ public class IncidenteController {
 		if (name_user != null) {
 			return new ResponseEntity<>(name_user, HttpStatus.OK);
 		} else {
-			String message = "No se encontró un usuario asociado con la incidencia ID: " + idIncidencia;
-			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró un usuario asociado con la incidencia ID: " + idIncidencia);
 		}
 	}
+
+	@PutMapping("/update")
+    public ResponseEntity<String> updateIncidente(
+		@RequestHeader("Authorization") String token,
+		@RequestBody Incidente incidente
+		) {
+
+		boolean updated = iincidenteService.update_incidente(token, incidente);
+
+		if (updated) {
+			return ResponseEntity.ok("Incidente actualizado correctamente");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Incidente no encontrado o no actualizado");
+		}
+    }
 }
