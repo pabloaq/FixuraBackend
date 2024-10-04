@@ -28,6 +28,9 @@ public class UsuarioService implements IusuarioService{
         return 0;
       }
   
+      if(!isValidEmail(usuario.getCorreo())){
+        throw new RuntimeException("Correo no valido");
+      }
       usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
       
       try {
@@ -69,6 +72,11 @@ public class UsuarioService implements IusuarioService{
     } catch (Exception e) {
       throw new RuntimeException("Error al obtener el perfil: " + e.getMessage());
     }
+  }
+
+  private boolean isValidEmail(String email){
+    String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail|outlook|hotmail)\\.(com|es|net)$";
+    return email.matches(emailRegex);
   }
   
 }
