@@ -24,10 +24,15 @@ public class UsuarioService implements IusuarioService{
 
   @Override
   public int register(Usuario usuario) {
-      if(usuarioRepository.checkEmailExist(usuario.getCorreo())){
+
+      if(!isValidEmail(usuario.getCorreo())){
+        throw new RuntimeException("Correo no valido");
+      }
+
+      if(checkEmail(usuario.getCorreo())){
         return 0;
       }
-  
+      
       usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
       
       try {
@@ -69,6 +74,21 @@ public class UsuarioService implements IusuarioService{
     } catch (Exception e) {
       throw new RuntimeException("Error al obtener el perfil: " + e.getMessage());
     }
+  }
+
+  @Override
+  public boolean checkEmail(String email) {
+    try {
+      boolean valor = usuarioRepository.checkEmailExist(email);
+      return valor;
+    } catch (Exception e) {
+      throw new RuntimeException("Error al iniciar sesión");
+    }
+  }
+
+  private boolean isValidEmail(String email){
+    String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail|outlook|hotmail)\\.(com|es|net)$";
+    return email.matches(emailRegex);
   }
   
 }

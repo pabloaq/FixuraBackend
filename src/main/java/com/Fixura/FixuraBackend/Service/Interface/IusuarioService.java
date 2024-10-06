@@ -7,4 +7,5 @@ public interface IusuarioService {
   public int register(Usuario usuario);
   public AuthResponse login(Usuario user);
   public Usuario profile(String token);
+  public boolean checkEmail(String email);
 }
