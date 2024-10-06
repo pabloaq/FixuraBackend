@@ -22,8 +22,6 @@ import com.Fixura.FixuraBackend.Model.Incidente;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 
-import io.jsonwebtoken.lang.Collections;
-
 import java.sql.Timestamp;
 import java.text.ParseException;
 
