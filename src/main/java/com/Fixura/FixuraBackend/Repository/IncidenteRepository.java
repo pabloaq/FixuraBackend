@@ -93,12 +93,18 @@ public class IncidenteRepository implements IincidenteRepository{
 		SET id_estado = ?, id_categoria = ?, ubicacion = ?
 		WHERE id_incidencia = ?;
 		""";
-		return jdbcTemplate.update(sql,new Object[] {
+
+		int result = jdbcTemplate.update(sql,new Object[] {
 			incidente.getId_estado(),
 			incidente.getId_categoria(),
 			incidente.getUbicacion(),
 			incidente.getId_incidencia()
-		}) > 0;
+		}) ;
+		
+		if (result == 0) {
+			throw new RuntimeException("No se pudo actualizar el incidente. ID no encontrado: " + incidente.getId_incidencia());
+		}
+		return result > 0;
 	}
 
 }

@@ -22,6 +22,8 @@ import com.Fixura.FixuraBackend.Model.Incidente;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 
+import io.jsonwebtoken.lang.Collections;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 
@@ -154,18 +156,23 @@ public class IncidenteController {
 		}
 	}
 
-	@PutMapping("/update")
-    public ResponseEntity<String> updateIncidente(
+	@PutMapping("/updateIncidencia")
+    public ResponseEntity<ServiceResponse> updateIncidente(
 		@RequestHeader("Authorization") String token,
 		@RequestBody Incidente incidente
 		) {
+		ServiceResponse response = new ServiceResponse();
 
 		boolean updated = iincidenteService.update_incidente(token, incidente);
 
 		if (updated) {
-			return ResponseEntity.ok("Incidente actualizado correctamente");
+			response.setSuccess(true);
+        	response.setMenssage("Incidente actualizado correctamente");
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Incidente no encontrado o no actualizado");
+			response.setSuccess(false);
+        response.setMenssage("Incidente no encontrado o no actualizado");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
+		return ResponseEntity.ok(response);
     }
 }
