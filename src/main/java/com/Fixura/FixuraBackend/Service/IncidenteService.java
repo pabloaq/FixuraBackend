@@ -30,7 +30,7 @@ public class IncidenteService implements IincidenteService{
 	}
 
     @Override
-	public List<Incidente> Listar_incidente_Municipalidad(String distrito) {
+	public List<Incidente> Listar_incidente_Municipalidad(int distrito) {
 		List<Incidente> list;
 		try {
 			list=incidenteRepository.Listar_incidente_Municipalidad(distrito);

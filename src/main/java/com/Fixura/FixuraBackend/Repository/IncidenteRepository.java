@@ -23,8 +23,8 @@ public class IncidenteRepository implements IincidenteRepository{
 	}
 
     @Override
-	public List<Incidente> Listar_incidente_Municipalidad(String distrito) {
-		String sql = "select * from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito='"+distrito+"' AND Incidencia.id_estado <> 4 ORDER BY fecha_publicacion DESC";
+	public List<Incidente> Listar_incidente_Municipalidad(int distrito) {
+		String sql = "select * from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito="+distrito+" AND Incidencia.id_estado <> 4 ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
 	}
 

@@ -39,9 +39,9 @@ public class IncidenteController {
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 
-    @GetMapping("/list/municipalidad/{id}")
-	public ResponseEntity<List<Incidente>> list2(@PathVariable String id){
-		var result  = iincidenteService.Listar_incidente_Municipalidad(id);
+    @GetMapping("/list/municipalidad/{id_distrito}")
+	public ResponseEntity<List<Incidente>> list2(@PathVariable int id_distrito){
+		var result  = iincidenteService.Listar_incidente_Municipalidad(id_distrito);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
     

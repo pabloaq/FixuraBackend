@@ -5,7 +5,7 @@ import com.Fixura.FixuraBackend.Model.Incidente;
 
 public interface IincidenteService {
     public List<Incidente> Listar_incidente_usuario(String dni);
-    public List<Incidente> Listar_incidente_Municipalidad(String distrito);
+    public List<Incidente> Listar_incidente_Municipalidad(int distrito);
 	public int save(Incidente incidente);
 	public int update_estado(Incidente incidente);
     public int update_categoria(Incidente incidente);
