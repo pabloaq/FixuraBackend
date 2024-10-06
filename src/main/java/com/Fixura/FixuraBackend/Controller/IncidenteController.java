@@ -111,17 +111,23 @@ public class IncidenteController {
 	}
 
     @PutMapping("/delete/{idIncidencia}")
-	public ResponseEntity<String> deleteIncidencia(
+	public ResponseEntity<ServiceResponse> deleteIncidencia(
 		@RequestHeader("Authorization") String token,
 		@PathVariable int idIncidencia
 		){
+		ServiceResponse response = new ServiceResponse();
+
 		boolean result = iincidenteService.delete(token, idIncidencia);
 
 		if (result) {
-			return ResponseEntity.ok("Incidente ELIMINADO correctamente");
+			response.setSuccess(true);
+        	response.setMenssage("Incidente eliminado correctamente");
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR al eliminar Incidente");
+			response.setSuccess(false);
+        	response.setMenssage("Incidente no encontrado o no eliminado");
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/totalVotos/{idIncidencia}")
@@ -168,8 +174,8 @@ public class IncidenteController {
         	response.setMenssage("Incidente actualizado correctamente");
 		} else {
 			response.setSuccess(false);
-        response.setMenssage("Incidente no encontrado o no actualizado");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        	response.setMenssage("Incidente no encontrado o no actualizado");
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 		return ResponseEntity.ok(response);
     }
