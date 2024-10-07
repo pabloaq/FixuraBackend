@@ -18,13 +18,13 @@ public class IncidenteRepository implements IincidenteRepository{
 
     @Override
 	public List<Incidente> Listar_incidente_usuario(String dni) {
-		String sql = "select * from Incidencia where DNI='"+dni+"' ORDER BY fecha_publicacion DESC";
+		String sql = "select * from Incidencia where DNI='"+dni+"' AND Incidencia.id_estado <> 4 ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
 	}
 
     @Override
-	public List<Incidente> Listar_incidente_Municipalidad(String distrito) {
-		String sql = "select * from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito='"+distrito+"' ORDER BY fecha_publicacion DESC";
+	public List<Incidente> Listar_incidente_Municipalidad(int distrito) {
+		String sql = "select * from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito="+distrito+" AND Incidencia.id_estado <> 4 ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
 	}
 
@@ -62,9 +62,9 @@ public class IncidenteRepository implements IincidenteRepository{
 	}
 
 	@Override
-	public int delete(int id) {
-		String sql = "DELETE Incidencia where id_incidencia=?";
-		return jdbcTemplate.update(sql, new Object[] {id});
+	public boolean delete(int id_incidencia) {
+		String sql = "UPDATE Incidencia SET id_estado = 4 WHERE id_incidencia = ?;";
+		return jdbcTemplate.update(sql, new Object[] {id_incidencia}) > 0;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -72,6 +72,39 @@ public class IncidenteRepository implements IincidenteRepository{
 	public int get_total_votos(int id_incidencia) {
 		String sql = "SELECT total_votos FROM Incidencia WHERE id_incidencia = ?";
 		return jdbcTemplate.queryForObject(sql, new Object[] {id_incidencia}, Integer.class);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public String get_name_user(int id_incidencia) {
+		String sql = """
+		SELECT us.nombre FROM Incidencia AS inc
+		INNER JOIN usuarios AS us ON us.dni = inc.dni
+		WHERE inc.id_incidencia = ?;
+		""";
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{id_incidencia}, String.class);
+	}
+
+	@Override
+	public boolean update_incidente(Incidente incidente) {
+		String sql = """
+		UPDATE Incidencia
+		SET id_estado = ?, id_categoria = ?, ubicacion = ?
+		WHERE id_incidencia = ?;
+		""";
+
+		int result = jdbcTemplate.update(sql,new Object[] {
+			incidente.getId_estado(),
+			incidente.getId_categoria(),
+			incidente.getUbicacion(),
+			incidente.getId_incidencia()
+		}) ;
+		
+		if (result == 0) {
+			throw new RuntimeException("No se pudo actualizar el incidente. ID no encontrado: " + incidente.getId_incidencia());
+		}
+		return result > 0;
 	}
 
 }

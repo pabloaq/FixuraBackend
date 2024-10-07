@@ -30,7 +30,7 @@ public class IncidenteService implements IincidenteService{
 	}
 
     @Override
-	public List<Incidente> Listar_incidente_Municipalidad(String distrito) {
+	public List<Incidente> Listar_incidente_Municipalidad(int distrito) {
 		List<Incidente> list;
 		try {
 			list=incidenteRepository.Listar_incidente_Municipalidad(distrito);
@@ -74,14 +74,15 @@ public class IncidenteService implements IincidenteService{
 	}
 
 	@Override
-	public int delete(int id) {
-		int row;
+	public boolean delete(String token, int id_incidencia) {
 		try {
-			row=incidenteRepository.delete(id);
+			if (jwtUtil.isTokenExpired(token)) {
+				throw new RuntimeException("Token Expirado...");
+			}
+			return incidenteRepository.delete(id_incidencia);
 		}catch (Exception ex) {
-			throw ex;
+			throw new RuntimeException("Error al Elimianr incidencia con ID: " + id_incidencia);
 		}
-		return row;
 	}
 
 	@Override
@@ -94,6 +95,31 @@ public class IncidenteService implements IincidenteService{
 			return num_votos;
 		} catch (Exception ex) {
 			throw new RuntimeException("Error al obtener total de votos de incidencia");
+		}
+	}
+
+	@Override
+	public String get_name_user(String token, int id_incidencia) {
+		try {
+			if (jwtUtil.isTokenExpired(token)) {
+				throw new RuntimeException("Token Expirado...");
+			}
+			String name_user = incidenteRepository.get_name_user(id_incidencia);
+			return name_user;
+		} catch (Exception ex) {
+			throw new RuntimeException("Error al obtener el NOMBRE DE USUARIO de la incidencia");
+		}
+	}
+
+	@Override
+	public boolean update_incidente(String token, Incidente incidente) {
+		try {
+			if (jwtUtil.isTokenExpired(token)) {
+				throw new RuntimeException("Token Expirado...");
+			}
+			return incidenteRepository.update_incidente(incidente);
+		} catch (Exception ex) {
+			throw new RuntimeException("Error al Actualizar incidencia con ID: "+ incidente.getId_incidencia());
 		}
 	}
 }

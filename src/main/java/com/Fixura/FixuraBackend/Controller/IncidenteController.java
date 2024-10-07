@@ -6,10 +6,11 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,9 +39,9 @@ public class IncidenteController {
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 
-    @GetMapping("/list/municipalidad/{id}")
-	public ResponseEntity<List<Incidente>> list2(@PathVariable String id){
-		var result  = iincidenteService.Listar_incidente_Municipalidad(id);
+    @GetMapping("/list/municipalidad/{id_distrito}")
+	public ResponseEntity<List<Incidente>> list2(@PathVariable int id_distrito){
+		var result  = iincidenteService.Listar_incidente_Municipalidad(id_distrito);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
     
@@ -109,16 +110,24 @@ public class IncidenteController {
 		return new ResponseEntity<>(serviceResponse,HttpStatus.OK);
 	}
 
-    @DeleteMapping("/delete/{id}")
-	public ResponseEntity<ServiceResponse> update(@PathVariable int id){
-		ServiceResponse serviceResponse = new ServiceResponse();
+    @PutMapping("/delete/{idIncidencia}")
+	public ResponseEntity<ServiceResponse> deleteIncidencia(
+		@RequestHeader("Authorization") String token,
+		@PathVariable int idIncidencia
+		){
+		ServiceResponse response = new ServiceResponse();
 
-		int result= iincidenteService.delete(id);
-		if(result==1) {
-			serviceResponse.setMenssage("El incidente se elimino correctamente.");
+		boolean result = iincidenteService.delete(token, idIncidencia);
+
+		if (result) {
+			response.setSuccess(true);
+        	response.setMenssage("Incidente eliminado correctamente");
+		} else {
+			response.setSuccess(false);
+        	response.setMenssage("Incidente no encontrado o no eliminado");
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
-		
-		return new ResponseEntity<>(serviceResponse,HttpStatus.OK);
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/totalVotos/{idIncidencia}")
@@ -135,4 +144,39 @@ public class IncidenteController {
 			return new ResponseEntity<>(-1, HttpStatus.NOT_FOUND);
 		}
 	}
+
+	@GetMapping("/name/usuario/{idIncidencia}")
+	public ResponseEntity<String> get_name_usuario(
+		@RequestHeader("Authorization") String token,
+		@PathVariable int idIncidencia
+		) {
+
+		String name_user = iincidenteService.get_name_user(token, idIncidencia);
+
+		if (name_user != null) {
+			return new ResponseEntity<>(name_user, HttpStatus.OK);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró un usuario asociado con la incidencia ID: " + idIncidencia);
+		}
+	}
+
+	@PutMapping("/updateIncidencia")
+    public ResponseEntity<ServiceResponse> updateIncidente(
+		@RequestHeader("Authorization") String token,
+		@RequestBody Incidente incidente
+		) {
+		ServiceResponse response = new ServiceResponse();
+
+		boolean updated = iincidenteService.update_incidente(token, incidente);
+
+		if (updated) {
+			response.setSuccess(true);
+        	response.setMenssage("Incidente actualizado correctamente");
+		} else {
+			response.setSuccess(false);
+        	response.setMenssage("Incidente no encontrado o no actualizado");
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
+		return ResponseEntity.ok(response);
+    }
 }
