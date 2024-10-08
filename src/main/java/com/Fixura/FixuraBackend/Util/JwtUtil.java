@@ -18,6 +18,13 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET_KEY; //32 bytes
 
+    @Value("${jwt.email.secret}")
+    private String SECRET_KEY_EMAIL;
+
+    @Value("${time.email.expiration}")
+    private long TIME_EMAIL_EXPIRATION;
+
+
     public String generateToken(Usuario user) {
         Map<String, Object> headers = new HashMap<>();
         headers.put("alg", "HS256");
@@ -31,6 +38,14 @@ public class JwtUtil {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
+    public String generateEmailValidationToken(Usuario user){
+        return Jwts.builder()
+                .setSubject(user.getCorreo())
+                .setExpiration(new Date(System.currentTimeMillis() + TIME_EMAIL_EXPIRATION)) // 5 minutos
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY_EMAIL)
                 .compact();
     }
 
@@ -52,6 +67,14 @@ public class JwtUtil {
     public boolean isTokenExpired(String token) {
         String jwtToken = token.substring(7); //Extraer el token del encabezado, ignorando "Bearer "
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody().getExpiration().before(new Date());
+    }
+
+    public boolean isTokenExpiredEmailVerification(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY_EMAIL).parseClaimsJws(token).getBody().getExpiration().before(new Date());
+    }
+
+    public String extractUserEmailVerification(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY_EMAIL).parseClaimsJws(token).getBody().getSubject();
     }
 
 }

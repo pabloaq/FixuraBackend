@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Correo</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <table border="0" align="center" cellpadding="0" cellspacing="0" width="90%" >
+        <tr>
+            <td align="center" style="padding: 10px 0;">
+                <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; padding: 20px; border-radius: 10px;">
+                    <tr>
+                        <td align="center" style="padding-bottom: 10px; font-size: 20px;">
+                            <h2>Estimado <span th:text="${nombre}">Nombre</span></h2>
+                            <h2>Gracias por registrarte</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding-bottom: 10px; font-size: 16px;">
+                            <p>Para completar el proceso de verificación de tu cuenta, haz clic en el botón a continuación.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding-bottom: 15px; font-size: 16px">
+                            <table border="0" cellpadding="0" cellspacing="0" style="border-radius: 5px; background-color: #4CAF50;">
+                                <tr>
+                                    <td align="center" style="padding: 12px 18px; font-size: 16px">
+                                        <a th:href="${link}" style="color: #ffffff; text-decoration: none; font-size: 16px;">Confirmar Correo</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding-top: 10px; font-size: 16px">
+                            <p>Si no realizaste esta solicitud, simplemente ignora este correo.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding-top: 10px; font-size: 16px">
+                            <p>Atentamente,<br/>Equipo de desarrollo CodeDevs</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

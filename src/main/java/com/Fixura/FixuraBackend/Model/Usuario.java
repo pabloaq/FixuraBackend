@@ -13,4 +13,6 @@ public class Usuario {
   private Timestamp tiempo_ban;
   private int id_rol;
   private int id_distrito;
+  private String token_verification;
+  private boolean activo;
 }

@@ -7,4 +7,6 @@ public interface IusuarioRepository {
   public Usuario login(String correo);
   public Usuario profile(String UserDni);
   public boolean checkEmailExist(String correo);
+  public Usuario findByCorreo(String correo);
+  public int updateUsuario(Usuario usuario);
 }
