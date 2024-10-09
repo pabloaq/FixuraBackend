@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 
 
 @Configuration
@@ -29,7 +30,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
 
                 // Endpoints permitidos para todos los usuarios
-                .requestMatchers("/api/usuario/login", "/api/usuario/register", "/api/usuario/existEmail", "/api/usuario/verification").permitAll()
+                .requestMatchers("/api/usuario/login", "/api/usuario/register", "/api/usuario/existEmail", "/api/usuario/verification", "/api/usuario/verifyDni").permitAll()
 
                 .requestMatchers("/api/v1/departamento/**").permitAll()
 
@@ -63,4 +64,8 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 }

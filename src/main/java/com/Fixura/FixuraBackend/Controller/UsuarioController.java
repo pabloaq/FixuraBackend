@@ -39,7 +39,7 @@ public class UsuarioController {
 
 
   @PostMapping(value="/register")
-  public ResponseEntity<?> register(@RequestBody Usuario usuario){
+  public ResponseEntity<ServiceResponse> register(@RequestBody Usuario usuario){
 
     ServiceResponse response = new ServiceResponse();
 
@@ -53,7 +53,6 @@ public class UsuarioController {
         }else{
           response.setSuccess(false);
           response.setMenssage("El correo electrónico ya existe");
-          System.out.println("El correo ya existe - Controller");
           return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }catch (Exception e) {
@@ -87,11 +86,34 @@ public class UsuarioController {
     }
   }
 
-  @PostMapping(value="/existEmail")
-  public ResponseEntity<Boolean> existEmail(@RequestBody String correo) {
-      boolean response = iusuarioServicey.checkEmail(correo);
+  @PostMapping("/existEmail")
+  public ResponseEntity<ServiceResponse> existEmail(@RequestBody String correo) {
+      ServiceResponse response = new ServiceResponse();
+      boolean exist = iusuarioServicey.checkEmail(correo);
+      if (exist) {
+        response.setSuccess(true);
+        response.setMenssage("El correo ya existe");
+      }else{
+        response.setSuccess(false);
+        response.setMenssage("El correo no existe");
+      }
       return new ResponseEntity<>(response, HttpStatus.OK);
   }
+
+  @PostMapping("/verifyDni")
+  public ResponseEntity<ServiceResponse> verifyDNI(@RequestBody String dni) {
+      ServiceResponse response = new ServiceResponse();
+      boolean verified = iusuarioServicey.getNameUserByDNI(dni).isSuccess();
+      if (verified) {
+        response.setSuccess(true);
+        response.setMenssage("El DNI valido");
+      }else{
+        response.setSuccess(false);
+        response.setMenssage("El DNI no es valido");
+      }
+      return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+  
   
   @GetMapping("/verification")
   public ResponseEntity<ServiceResponse> verification(@RequestParam("token") String token) {
