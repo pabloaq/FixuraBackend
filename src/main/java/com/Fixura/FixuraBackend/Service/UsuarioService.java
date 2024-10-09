@@ -3,7 +3,9 @@ package com.Fixura.FixuraBackend.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.Fixura.FixuraBackend.Model.ApiDniResponse;
 import com.Fixura.FixuraBackend.Model.AuthResponse;
 import com.Fixura.FixuraBackend.Model.Usuario;
 import com.Fixura.FixuraBackend.Repository.UsuarioRepository;
@@ -25,34 +27,45 @@ public class UsuarioService implements IusuarioService{
   @Autowired
   private EmailVerification emailVerification;
 
+  @Autowired
+  private RestTemplate restTemplate;
+
   @Override
   public int register(Usuario usuario) {
 
-      if(!isValidEmail(usuario.getCorreo())){
-        throw new RuntimeException("Correo no valido");
-      }
+    // Validar email
+    if (!isValidEmail(usuario.getCorreo())) {
+      throw new RuntimeException("Correo no valido");
+    }
 
-      if(checkEmail(usuario.getCorreo())){
-        return 0;
-      }
-      
-      usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+    // Verificar si el correo ya existe
+    if (checkEmail(usuario.getCorreo())) {
+        throw new RuntimeException("El correo electrónico ya existe");
+    }
 
-      String token_email_verification = jwtUtil.generateEmailValidationToken(usuario);
+    // Verificar el DNI
+    ApiDniResponse dniResponse = getNameUserByDNI(usuario.getDNI());
+    if (!dniResponse.isSuccess()) {
+        throw new RuntimeException("El DNI ingresado no es válido");
+    }
 
-      usuario.setToken_verification(token_email_verification);
-      usuario.setActivo(false);
+    // Establecer valores del usuario y codificar la contraseña
+    usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+    usuario.setNombre(dniResponse.getData().getNombres());
 
-      try {
+    // Generar token de verificación de email
+    String token_email_verification = jwtUtil.generateEmailValidationToken(usuario);
+    usuario.setToken_verification(token_email_verification);
+    usuario.setActivo(false);
+
+    // Guardar el usuario en la base de datos
+    try {
         int result = usuarioRepository.register(usuario);
-
         emailVerification.sendEmailVerification(usuario);
-
         return result;
-        
-      } catch (Exception e) {
+    } catch (Exception e) {
         throw new RuntimeException("Error al registrar el usuario", e);
-      }
+    }
   }
 
   @Override
@@ -94,13 +107,18 @@ public class UsuarioService implements IusuarioService{
     try {
       return usuarioRepository.checkEmailExist(email);
     } catch (Exception e) {
-      throw new RuntimeException("Error al iniciar sesión");
+      throw new RuntimeException("Error al verificar el correo");
     }
+  }
+
+  @Override
+  public ApiDniResponse getNameUserByDNI(String DNI) {
+    String url = "https://apiperu.dev/api/dni/"+DNI+"?api_token=e15f4001510845c4c28d081d955fb095981312d118efda2d1658bbbf84349d84";
+    return restTemplate.getForObject(url, ApiDniResponse.class);
   }
 
   private boolean isValidEmail(String email){
     String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail|outlook|hotmail)\\.(com|es|net)$";
     return email.matches(emailRegex);
   }
-  
 }
