@@ -14,7 +14,7 @@ import com.Fixura.FixuraBackend.Util.JwtUtil;
 public class CategoriaService implements IcategoriaService{
 
     @Autowired
-  	private JwtUtil jwtUtil;
+    private JwtUtil jwtUtil;
 
     @Autowired
     private CategoriaRepository categoriaRepository;
