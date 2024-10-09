@@ -22,6 +22,9 @@ public class UsuarioService implements IusuarioService{
   @Autowired
   private PasswordEncoder passwordEncoder;
 
+  @Autowired
+  private EmailVerification emailVerification;
+
   @Override
   public int register(Usuario usuario) {
 
@@ -34,9 +37,19 @@ public class UsuarioService implements IusuarioService{
       }
       
       usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
-      
+
+      String token_email_verification = jwtUtil.generateEmailValidationToken(usuario);
+
+      usuario.setToken_verification(token_email_verification);
+      usuario.setActivo(false);
+
       try {
-        return usuarioRepository.register(usuario);
+        int result = usuarioRepository.register(usuario);
+
+        emailVerification.sendEmailVerification(usuario);
+
+        return result;
+        
       } catch (Exception e) {
         throw new RuntimeException("Error al registrar el usuario", e);
       }
@@ -79,8 +92,7 @@ public class UsuarioService implements IusuarioService{
   @Override
   public boolean checkEmail(String email) {
     try {
-      boolean valor = usuarioRepository.checkEmailExist(email);
-      return valor;
+      return usuarioRepository.checkEmailExist(email);
     } catch (Exception e) {
       throw new RuntimeException("Error al iniciar sesión");
     }

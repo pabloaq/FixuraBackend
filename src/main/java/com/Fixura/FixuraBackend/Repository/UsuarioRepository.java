@@ -17,7 +17,7 @@ public class UsuarioRepository implements IusuarioRepository{
 
   @Override
   public int register(Usuario usuario) {
-    String SQL = "INSERT INTO Usuarios (DNI, nombre, correo, contrasenia, foto_perfil, tiempo_ban, id_rol, id_distrito) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    String SQL = "INSERT INTO Usuarios (DNI, nombre, correo, contrasenia, foto_perfil, tiempo_ban, id_rol, id_distrito, token_verification, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     return jdbcTemplate.update(SQL, new Object[]{
       usuario.getDNI(),
       usuario.getNombre(), 
@@ -26,14 +26,16 @@ public class UsuarioRepository implements IusuarioRepository{
       usuario.getFoto_perfil(), 
       usuario.getTiempo_ban(), 
       usuario.getId_rol(), 
-      usuario.getId_distrito()
+      usuario.getId_distrito(),
+      usuario.getToken_verification(),
+      usuario.isActivo()
     });
   }
 
   @Override
   public Usuario login(String correo) {
-    String SQL = "SELECT * FROM Usuarios WHERE correo = '" + correo + "'";
-    List<Usuario> users = jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(Usuario.class));
+    String SQL = "SELECT * FROM Usuarios WHERE correo = ? AND activo = true";
+    List<Usuario> users = jdbcTemplate.query(SQL,  BeanPropertyRowMapper.newInstance(Usuario.class), correo);
     return users.isEmpty() ? null : users.get(0);
   }
 
@@ -51,4 +53,16 @@ public class UsuarioRepository implements IusuarioRepository{
       return count > 0;
   }
 
+  @Override
+  public Usuario findByCorreo(String correo) {
+    String SQL = "SELECT * FROM Usuarios WHERE correo = ?";
+    List<Usuario> users = jdbcTemplate.query(SQL,  BeanPropertyRowMapper.newInstance(Usuario.class), correo);
+    return users.isEmpty() ? null : users.get(0);
+  }
+
+  @Override
+  public int updateUsuario(Usuario usuario) {
+    String SQL = "UPDATE Usuarios SET activo = ?, token_verification = ? WHERE correo = ?";
+    return jdbcTemplate.update(SQL, usuario.isActivo(), usuario.getToken_verification(), usuario.getCorreo());
+  }
 }

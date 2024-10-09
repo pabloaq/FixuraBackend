@@ -29,7 +29,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
 
                 // Endpoints permitidos para todos los usuarios
-                .requestMatchers("/api/usuario/login", "/api/usuario/register", "/api/usuario/existEmail").permitAll()
+                .requestMatchers("/api/usuario/login", "/api/usuario/register", "/api/usuario/existEmail", "/api/usuario/verification").permitAll()
 
                 .requestMatchers("/api/v1/departamento/**").permitAll()
 
