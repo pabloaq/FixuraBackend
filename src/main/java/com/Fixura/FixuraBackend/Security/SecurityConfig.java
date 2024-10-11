@@ -30,7 +30,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
 
                 // Endpoints permitidos para todos los usuarios
-                .requestMatchers("/api/usuario/login", "/api/usuario/register", "/api/usuario/existEmail", "/api/usuario/verification", "/api/usuario/verifyDni").permitAll()
+                .requestMatchers("/api/usuario/login", 
+                                "/api/usuario/register", 
+                                "/api/usuario/existEmail", 
+                                "/api/usuario/verification", 
+                                "/api/usuario/verifyDni",
+                                "/api/usuario/forgot-password",
+                                "/api/usuario/reset-password").permitAll()
 
                 .requestMatchers("/api/v1/departamento/**").permitAll()
 
@@ -42,6 +48,8 @@ public class SecurityConfig {
 
                 // Endpoints permitidos para usuarios con rol USER
                 .requestMatchers("/api/incidenteLike/**").hasAuthority("USER")
+
+                .requestMatchers("/api/usuario/reset-password").authenticated()
                 
                 // Permitir el acceso para cualquier usuario autenticado
                 .anyRequest().authenticated()

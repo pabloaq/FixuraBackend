@@ -9,4 +9,5 @@ public interface IusuarioRepository {
   public boolean checkEmailExist(String correo);
   public Usuario findByCorreo(String correo);
   public int updateUsuario(Usuario usuario);
+  public int updatePassword(String new_password, String correo);
 }
