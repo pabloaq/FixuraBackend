@@ -24,30 +24,30 @@ public class EmailVerification {
   @Autowired
   private TemplateEngine templateEngine;
 
-  public void sendEmailVerification(Usuario user) throws MessagingException, UnsupportedEncodingException{
+  public void sendEmailVerification(Usuario user, String subject, String path, String template) throws MessagingException, UnsupportedEncodingException{
 
     MimeMessage message = sender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message, true);
     
     helper.setFrom("noreply@fixura.com", "Fixura");
     helper.setTo(user.getCorreo());
-    helper.setSubject("Confirma tu Correo Electronico");
+    helper.setSubject(subject);
 
-    String emailContent = loadEmailTemplate(user.getNombre(), generateConfirmationLink(user.getToken_verification()));
+    String emailContent = loadEmailTemplate(user.getNombre(), generateConfirmationLink(path, user.getToken_verification()), template);
     helper.setText(emailContent, true);
 
     sender.send(message);
   }
 
-  private String generateConfirmationLink(String token) {
-    return "http://localhost:4200/verify-email?token=" + token;
+  private String generateConfirmationLink(String path, String token) {
+    return "http://localhost:4200/"+path+"?token=" + token;
   }
 
-  private String loadEmailTemplate(String nombre, String link){
+  private String loadEmailTemplate(String nombre, String link, String template){
     Context context = new Context();
     context.setVariable("nombre", nombre);
     context.setVariable("link", link);
 
-    return templateEngine.process("email-verification-template", context);
+    return templateEngine.process(template, context);
   }
 }

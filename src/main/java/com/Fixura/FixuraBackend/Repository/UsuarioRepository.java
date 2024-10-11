@@ -65,4 +65,10 @@ public class UsuarioRepository implements IusuarioRepository{
     String SQL = "UPDATE Usuarios SET activo = ?, token_verification = ? WHERE correo = ?";
     return jdbcTemplate.update(SQL, usuario.isActivo(), usuario.getToken_verification(), usuario.getCorreo());
   }
+
+  @Override
+  public int updatePassword(String new_password, String correo) {
+    String SQL = "UPDATE Usuarios SET contrasenia = ? WHERE correo = ?";
+    return jdbcTemplate.update(SQL, new_password, correo);
+  }
 }

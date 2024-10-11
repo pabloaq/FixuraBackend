@@ -53,15 +53,15 @@ public class UsuarioService implements IusuarioService{
     usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
     usuario.setNombre(dniResponse.getData().getNombres());
 
-    // Generar token de verificación de email
+    // Se genera el token de verificación de email
     String token_email_verification = jwtUtil.generateEmailValidationToken(usuario);
     usuario.setToken_verification(token_email_verification);
     usuario.setActivo(false);
 
-    // Guardar el usuario en la base de datos
+    // Guardamos el usuario
     try {
         int result = usuarioRepository.register(usuario);
-        emailVerification.sendEmailVerification(usuario);
+        emailVerification.sendEmailVerification(usuario, "Confirma tu Correo Electronico", "verify-email", "email-verification-template");
         return result;
     } catch (Exception e) {
         throw new RuntimeException("Error al registrar el usuario", e);
