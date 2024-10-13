@@ -2,6 +2,7 @@ package com.Fixura.FixuraBackend.Service;
 import org.springframework.stereotype.Service;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
+import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
 import com.Fixura.FixuraBackend.Repository.IncidenteRepository;
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 import com.Fixura.FixuraBackend.Util.JwtUtil;
@@ -39,7 +40,26 @@ public class IncidenteService implements IincidenteService{
 		}
 		return list;
 	}
-
+	@Override
+	public List<IncidentesCoordenada> Listar_coordenadas_incidentes_Municipalidad(int distrito) {
+		List<IncidentesCoordenada> list;
+		try {
+			list=incidenteRepository.Listar_coordenadas_incidentes_Municipalidad(distrito);
+		}catch (Exception ex) {
+			throw ex;
+		}
+		return list;
+	}
+	@Override
+	public IncidentesCoordenada Listar_Coordenada_Incidente(int id_incidencia) {
+		IncidentesCoordenada coordenada_incidencia;
+		try {
+			coordenada_incidencia=incidenteRepository.Listar_Coordenada_Incidente(id_incidencia);
+		}catch (Exception ex) {
+			throw ex;
+		}
+		return coordenada_incidencia;
+	}
     @Override
 	public int save(Incidente incidente) {
 		int row;

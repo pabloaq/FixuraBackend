@@ -39,7 +39,11 @@ public class SecurityConfig {
                                 "/api/usuario/reset-password").permitAll()
 
                 .requestMatchers("/api/v1/departamento/**").permitAll()
-
+		.requestMatchers("/api/incidente/list/usuario/**").permitAll()
+                .requestMatchers("/api/incidente/list/municipalidad/**").permitAll()
+                .requestMatchers("/api/incidente/list/coordenadas/**").permitAll()
+                .requestMatchers("/api/incidente/list/coordenada/**").permitAll()
+                .requestMatchers("/api/incidente/udpateIncidencia").permitAll()
                 // Endpoints permitidos para usuarios con rol ADMIN
                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
 
