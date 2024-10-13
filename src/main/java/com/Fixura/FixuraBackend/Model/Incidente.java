@@ -14,4 +14,6 @@ public class Incidente {
     int id_estado;
     String DNI;
     int id_categoria;
+    double latitud;
+    double longitud;
 }

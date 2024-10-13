@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.MediaType;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
+import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 
@@ -44,7 +45,16 @@ public class IncidenteController {
 		var result  = iincidenteService.Listar_incidente_Municipalidad(id_distrito);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
-    
+    @GetMapping("/list/coordenadas/{id_distrito}")
+	public ResponseEntity<List<IncidentesCoordenada>> list3(@PathVariable int id_distrito){
+		var result  = iincidenteService.Listar_coordenadas_incidentes_Municipalidad(id_distrito);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	@GetMapping("/list/coordenada/{id_incidente}")
+	public ResponseEntity<IncidentesCoordenada> list4(@PathVariable int id_incidente){
+		var result  = iincidenteService.Listar_Coordenada_Incidente(id_incidente);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
     @PostMapping(value="/save")
 	public ResponseEntity<ServiceResponse> save(@RequestParam("fecha_publicacion") String fecha_publicacion,
 			@RequestParam("descripcion") String descripcion,
@@ -53,7 +63,9 @@ public class IncidenteController {
 			@RequestParam("total_votos") int total_votos,
             @RequestParam("id_estado") int id_estado,
             @RequestParam("DNI") String DNI,
-            @RequestParam("id_categoria") int id_categoria
+            @RequestParam("id_categoria") int id_categoria,
+			@RequestParam("latitud") double latitud,
+			@RequestParam("longitud") double longitud
             ) throws IOException, ParseException{
 			Incidente incidente= new Incidente();
 		ServiceResponse serviceResponse = new ServiceResponse();
@@ -67,7 +79,8 @@ public class IncidenteController {
         incidente.setId_estado(id_estado);
         incidente.setDNI(DNI);
         incidente.setId_categoria(id_categoria);
-
+		incidente.setLatitud(latitud);
+		incidente.setLongitud(longitud);
 		int result= iincidenteService.save(incidente);
 		if(result==1) {
 			serviceResponse.setMenssage("El producto se registro correctamente.");
