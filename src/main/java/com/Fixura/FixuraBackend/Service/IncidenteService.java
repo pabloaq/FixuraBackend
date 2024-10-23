@@ -58,6 +58,19 @@ public class IncidenteService implements IincidenteService{
 		return listPage;
 	}
 
+	@Override
+	public Page<infoIncidente> page_incidente_distrito(int pageSize, int pageNumber, int id_distrito) {
+		Page<infoIncidente> listPage;
+
+		try {
+			listPage = incidenteRepository.page_incidente_distrito(pageSize, pageNumber, id_distrito);
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		return listPage;
+	}
+
     @Override
 	public List<Incidente> Listar_incidente_Municipalidad(int distrito) {
 		List<Incidente> list;
