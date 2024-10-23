@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.MediaType;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
 import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
+import com.Fixura.FixuraBackend.Model.infoIncidente;
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 
 import java.sql.Timestamp;
@@ -38,6 +40,18 @@ public class IncidenteController {
 	public ResponseEntity<List<Incidente>> list(@PathVariable String id){
 		var result  = iincidenteService.Listar_incidente_usuario(id);
 		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+
+	@GetMapping("/list/paginated/usuario")
+	public ResponseEntity<Page<infoIncidente>> getIncidentesPorUsuario(
+			@RequestParam int page,
+			@RequestParam int size,
+			@RequestParam String dni) {
+		Page<infoIncidente> incidentes = iincidenteService.page_incidente_usuario(size, page, dni);
+		if (incidentes.getTotalElements() == 0) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 si no hay registros
+		}
+		return new ResponseEntity<>(incidentes, HttpStatus.OK);
 	}
 
     @GetMapping("/list/municipalidad/{id_distrito}")
