@@ -54,6 +54,19 @@ public class IncidenteController {
 		return new ResponseEntity<>(incidentes, HttpStatus.OK);
 	}
 
+	@GetMapping("/list/paginated/usuario_distrito")
+	public ResponseEntity<Page<infoIncidente>> getIncidentesPorUsuarioDistrito(
+			@RequestParam int page,
+			@RequestParam int size,
+			@RequestParam String dni,
+			@RequestParam int id_distrito) {
+		Page<infoIncidente> incidentes = iincidenteService.page_incidente_usuario_distrito(size, page, dni, id_distrito);
+		if (incidentes.getTotalElements() == 0) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 si no hay registros
+		}
+		return new ResponseEntity<>(incidentes, HttpStatus.OK);
+	}
+
     @GetMapping("/list/municipalidad/{id_distrito}")
 	public ResponseEntity<List<Incidente>> list2(@PathVariable int id_distrito){
 		var result  = iincidenteService.Listar_incidente_Municipalidad(id_distrito);

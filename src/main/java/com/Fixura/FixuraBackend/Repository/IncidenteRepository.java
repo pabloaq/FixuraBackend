@@ -61,6 +61,39 @@ public class IncidenteRepository implements IincidenteRepository{
 
 		return new PageImpl<>(result, pageable, totalPages);
 	}
+
+	@Override
+	public Page<infoIncidente> page_incidente_usuario_distrito(int pageSize, int pageNumber, String dni, int id_distrito) {
+		String sql = "SELECT * FROM lista_incidente_usuario_distrito(:dni, :id_distrito, :pageSize, :offset)";
+
+		int offset = pageNumber * pageSize; // Calcula el desplazamiento para la paginación
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("dni", dni);
+		params.put("id_distrito", id_distrito);
+		params.put("pageSize", pageSize);
+		params.put("offset", offset);
+
+		NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+
+		List<infoIncidente> result = namedParameterJdbcTemplate.query(sql, params, BeanPropertyRowMapper.newInstance(infoIncidente.class));
+
+		String countSql = """
+			SELECT COUNT(*) 
+			FROM incidencia AS inc
+			INNER JOIN usuarios AS us ON inc.dni = us.dni
+			WHERE us.id_distrito = :id_distrito AND inc.id_estado <> 4
+			""";
+		
+		int totalRecords = namedParameterJdbcTemplate.queryForObject(countSql, params, Integer.class);
+
+		// Calcular el número total de páginas
+		long totalPages = (long) Math.ceil((double) totalRecords / pageSize);
+
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+		return new PageImpl<>(result, pageable, totalPages);
+	}
 	
     @Override
 	public List<Incidente> Listar_incidente_Municipalidad(int distrito) {

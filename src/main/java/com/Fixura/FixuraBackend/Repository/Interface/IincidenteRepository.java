@@ -10,6 +10,7 @@ import com.Fixura.FixuraBackend.Model.infoIncidente;
 public interface IincidenteRepository {
     public List<Incidente> Listar_incidente_usuario(String dni);
     public Page<infoIncidente> page_incidente_usuario(int pageSize, int pageNumber, String dni);
+    public Page<infoIncidente> page_incidente_usuario_distrito(int pageSize, int pageNumber, String dni, int id_distrito);
     public List<Incidente> Listar_incidente_Municipalidad(int distrito);
     public List<IncidentesCoordenada> Listar_coordenadas_incidentes_Municipalidad(int distrito);
     public IncidentesCoordenada Listar_Coordenada_Incidente(int id_incidencia);
