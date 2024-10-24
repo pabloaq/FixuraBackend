@@ -17,7 +17,7 @@ public class UsuarioRepository implements IusuarioRepository{
 
   @Override
   public int register(Usuario usuario) {
-    String SQL = "INSERT INTO Usuarios (DNI, nombre, correo, contrasenia, foto_perfil, tiempo_ban, id_rol, id_distrito, token_verification, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    String SQL = "INSERT INTO Usuarios (DNI, nombre, apellido, correo, contrasenia, foto_perfil, tiempo_ban, id_rol, id_distrito, token_verification, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     return jdbcTemplate.update(SQL, new Object[]{
       usuario.getDNI(),
       usuario.getNombre(), 

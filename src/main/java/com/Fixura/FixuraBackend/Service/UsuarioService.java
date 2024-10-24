@@ -52,6 +52,7 @@ public class UsuarioService implements IusuarioService{
     // Establecer valores del usuario y codificar la contraseña
     usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
     usuario.setNombre(dniResponse.getData().getNombres());
+    usuario.setApellido(dniResponse.getData().getApellidoPaterno() + " " + dniResponse.getData().getApellidoMaterno());
 
     // Se genera el token de verificación de email
     String token_email_verification = jwtUtil.generateEmailValidationToken(usuario);
