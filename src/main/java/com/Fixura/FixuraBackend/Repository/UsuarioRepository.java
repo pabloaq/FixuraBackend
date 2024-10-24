@@ -21,6 +21,7 @@ public class UsuarioRepository implements IusuarioRepository{
     return jdbcTemplate.update(SQL, new Object[]{
       usuario.getDNI(),
       usuario.getNombre(), 
+      usuario.getApellido(),
       usuario.getCorreo(), 
       usuario.getContrasenia(), 
       usuario.getFoto_perfil(), 
