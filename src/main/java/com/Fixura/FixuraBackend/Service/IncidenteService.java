@@ -3,12 +3,14 @@ import org.springframework.stereotype.Service;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
 import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
+import com.Fixura.FixuraBackend.Model.infoIncidente;
 import com.Fixura.FixuraBackend.Repository.IncidenteRepository;
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 import com.Fixura.FixuraBackend.Util.JwtUtil;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
 @Service
 public class IncidenteService implements IincidenteService{
@@ -28,6 +30,45 @@ public class IncidenteService implements IincidenteService{
 			throw ex;
 		}
 		return list;
+	}
+
+	@Override
+	public Page<infoIncidente> page_incidente_usuario(int pageSize, int pageNumber, String dni) {
+		Page<infoIncidente> listPage;
+
+		try {
+			listPage = incidenteRepository.page_incidente_usuario(pageSize, pageNumber, dni);
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		return listPage;
+	}
+
+	@Override
+	public Page<infoIncidente> page_incidente_usuario_distrito(int pageSize, int pageNumber, String dni, int id_distrito) {
+		Page<infoIncidente> listPage;
+
+		try {
+			listPage = incidenteRepository.page_incidente_usuario_distrito(pageSize, pageNumber, dni, id_distrito);
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		return listPage;
+	}
+
+	@Override
+	public Page<infoIncidente> page_incidente_distrito(int pageSize, int pageNumber, int id_distrito) {
+		Page<infoIncidente> listPage;
+
+		try {
+			listPage = incidenteRepository.page_incidente_distrito(pageSize, pageNumber, id_distrito);
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		return listPage;
 	}
 
     @Override
@@ -142,4 +183,5 @@ public class IncidenteService implements IincidenteService{
 			throw new RuntimeException("Error al Actualizar incidencia con ID: "+ incidente.getId_incidencia());
 		}
 	}
+
 }
