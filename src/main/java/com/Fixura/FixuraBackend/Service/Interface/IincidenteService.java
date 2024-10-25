@@ -2,10 +2,12 @@ package com.Fixura.FixuraBackend.Service.Interface;
 import java.util.List;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
+import com.Fixura.FixuraBackend.Model.UsuarioBlock;
 
 public interface IincidenteService {
     public List<Incidente> Listar_incidente_usuario(String dni);
     public List<Incidente> Listar_incidente_Municipalidad(int distrito);
+    public List<UsuarioBlock> Listar_usuarios_municipalidad(int id_distrito);
 	public int save(Incidente incidente);
 	public int update_estado(Incidente incidente);
     public int update_categoria(Incidente incidente);

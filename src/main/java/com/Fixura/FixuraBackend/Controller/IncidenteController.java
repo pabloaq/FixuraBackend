@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
+import com.Fixura.FixuraBackend.Model.UsuarioBlock;
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 
 import java.sql.Timestamp;
@@ -44,6 +45,17 @@ public class IncidenteController {
 		var result  = iincidenteService.Listar_incidente_Municipalidad(id_distrito);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
+
+	@GetMapping("/list/municipalidad/usuarios/{id_distrito}")
+	public ResponseEntity<List<UsuarioBlock>> getMethodName(@PathVariable int id_distrito) {
+		var result = iincidenteService.Listar_usuarios_municipalidad(id_distrito);
+
+		if (result.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
     
     @PostMapping(value="/save")
 	public ResponseEntity<ServiceResponse> save(@RequestParam("fecha_publicacion") String fecha_publicacion,

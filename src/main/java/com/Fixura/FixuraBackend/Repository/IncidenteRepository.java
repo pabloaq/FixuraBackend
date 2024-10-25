@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
+import com.Fixura.FixuraBackend.Model.UsuarioBlock;
 import com.Fixura.FixuraBackend.Repository.Interface.IincidenteRepository;
 
 @Repository
@@ -26,6 +27,12 @@ public class IncidenteRepository implements IincidenteRepository{
 	public List<Incidente> Listar_incidente_Municipalidad(int distrito) {
 		String sql = "select * from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito="+distrito+" AND Incidencia.id_estado <> 4 ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
+	}
+
+	@Override
+	public List<UsuarioBlock> Listar_usuarios_municipalidad(int id_distrito){
+		String sql = "SELECT dni, nombre, apellido, correo FROM Usuarios WHERE Usuarios.id_distrito = ? AND Usuarios.apellido <> ''";
+		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UsuarioBlock.class), id_distrito);
 	}
 
 	@Override
