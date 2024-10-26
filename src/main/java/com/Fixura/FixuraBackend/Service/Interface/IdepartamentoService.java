@@ -10,4 +10,5 @@ public interface IdepartamentoService {
   public List<Departamento> Listar_departamento();
   public List<Provincia> Listar_provinvia(Integer id_depart);
   public List<Distrito> Listar_distrito(Integer id_prov);
+  public Distrito getNameDistrito(int id_distrito);
 } 

@@ -45,4 +45,9 @@ public class DepartamentoController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
   
+  @GetMapping("/distrito/{id_distrito}")
+  public ResponseEntity<Distrito> getDistrito(@PathVariable int id_distrito) {
+    var result = idepartamentoService.getNameDistrito(id_distrito);
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
 }

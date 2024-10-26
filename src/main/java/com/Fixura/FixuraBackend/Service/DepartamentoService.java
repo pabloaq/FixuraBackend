@@ -58,5 +58,16 @@ public class DepartamentoService implements IdepartamentoService {
     }
     return list;
   }
+
+  @Override
+  public Distrito getNameDistrito(int id_distrito) {
+    Distrito distrito;
+    try{
+      distrito = idistritoRepository.getNameDistrito(id_distrito);
+    }catch (Exception e) {
+      throw e;
+    }
+    return distrito;
+  }
   
 }
