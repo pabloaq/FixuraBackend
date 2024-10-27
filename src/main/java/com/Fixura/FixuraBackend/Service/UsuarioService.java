@@ -13,7 +13,7 @@ import com.Fixura.FixuraBackend.Service.Interface.IusuarioService;
 import com.Fixura.FixuraBackend.Util.JwtUtil;
 
 @Service
-public class UsuarioService implements IusuarioService{
+public class UsuarioService implements IusuarioService {
 
   @Autowired
   private UsuarioRepository usuarioRepository;
@@ -40,13 +40,13 @@ public class UsuarioService implements IusuarioService{
 
     // Verificar si el correo ya existe
     if (checkEmail(usuario.getCorreo())) {
-        throw new RuntimeException("El correo electrónico ya existe");
+      throw new RuntimeException("El correo electrónico ya existe");
     }
 
     // Verificar el DNI
     ApiDniResponse dniResponse = getNameUserByDNI(usuario.getDNI());
     if (!dniResponse.isSuccess()) {
-        throw new RuntimeException("El DNI ingresado no es válido");
+      throw new RuntimeException("El DNI ingresado no es válido");
     }
 
     // Establecer valores del usuario y codificar la contraseña
@@ -61,11 +61,12 @@ public class UsuarioService implements IusuarioService{
 
     // Guardamos el usuario
     try {
-        int result = usuarioRepository.register(usuario);
-        emailVerification.sendEmailVerification(usuario, "Confirma tu Correo Electronico", "verify-email", "email-verification-template");
-        return result;
+      int result = usuarioRepository.register(usuario);
+      emailVerification.sendEmailVerification(usuario, "Confirma tu Correo Electronico", "verify-email",
+          "email-verification-template");
+      return result;
     } catch (Exception e) {
-        throw new RuntimeException("Error al registrar el usuario", e);
+      throw new RuntimeException("Error al registrar el usuario", e);
     }
   }
 
@@ -74,12 +75,13 @@ public class UsuarioService implements IusuarioService{
     try {
 
       Usuario userData = usuarioRepository.login(user.getCorreo());
-      
+
       if (userData != null && passwordEncoder.matches(user.getContrasenia(), userData.getContrasenia())) {
         String token = jwtUtil.generateToken(userData);
         return new AuthResponse(token);
-      } else throw new RuntimeException("Credenciales inválidas");
-      
+      } else
+        throw new RuntimeException("Credenciales inválidas");
+
     } catch (Exception e) {
       throw new RuntimeException("Error al iniciar sesión");
     }
@@ -97,7 +99,7 @@ public class UsuarioService implements IusuarioService{
       String userDni = jwtUtil.extractUserDni(token);
       Usuario userData = usuarioRepository.profile(userDni);
       return userData;
-      
+
     } catch (Exception e) {
       throw new RuntimeException("Error al obtener el perfil: " + e.getMessage());
     }
@@ -114,11 +116,17 @@ public class UsuarioService implements IusuarioService{
 
   @Override
   public ApiDniResponse getNameUserByDNI(String DNI) {
-    String url = "https://apiperu.dev/api/dni/"+DNI+"?api_token=e15f4001510845c4c28d081d955fb095981312d118efda2d1658bbbf84349d84";
+    String url = "https://apiperu.dev/api/dni/" + DNI
+        + "?api_token=e15f4001510845c4c28d081d955fb095981312d118efda2d1658bbbf84349d84";
     return restTemplate.getForObject(url, ApiDniResponse.class);
   }
 
-  private boolean isValidEmail(String email){
+  @Override
+  public int banUser(String dni, boolean isPermanent, String durationBan) {
+    return usuarioRepository.banUser(dni, isPermanent, durationBan);
+  }
+
+  private boolean isValidEmail(String email) {
     String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail|outlook|hotmail)\\.(com|es|net)$";
     return email.matches(emailRegex);
   }

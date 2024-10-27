@@ -13,7 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
 
-
 @Configuration
 public class SecurityConfig {
 
@@ -24,46 +23,47 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors()
-            .and()
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
+                .cors()
+                .and()
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
 
-                // Endpoints permitidos para todos los usuarios
-                .requestMatchers("/api/usuario/login", 
-                                "/api/usuario/register", 
-                                "/api/usuario/existEmail", 
-                                "/api/usuario/verification", 
+                        // Endpoints permitidos para todos los usuarios
+                        .requestMatchers("/api/usuario/login",
+                                "/api/usuario/register",
+                                "/api/usuario/existEmail",
+                                "/api/usuario/verification",
                                 "/api/usuario/verifyDni",
                                 "/api/usuario/forgot-password",
-                                "/api/usuario/reset-password").permitAll()
+                                "/api/usuario/reset-password")
+                        .permitAll()
 
-                .requestMatchers("/api/v1/departamento/**").permitAll()
+                        .requestMatchers("/api/v1/departamento/**").permitAll()
 
-                // Endpoints permitidos para usuarios con rol ADMIN
-                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                        // Endpoints permitidos para usuarios con rol ADMIN
+                        .requestMatchers("/api/admin/**",
+                                "/api/usuario/*/ban")
+                        .hasAuthority("ADMIN")
 
-                // Endpoints permitidos para usuarios con rol MODERADOR
-                .requestMatchers("/api/moderator/**").hasAuthority("MODERATOR")
+                        // Endpoints permitidos para usuarios con rol MODERADOR
+                        .requestMatchers("/api/moderator/**").hasAuthority("MODERATOR")
 
-                // Endpoints permitidos para usuarios con rol USER
-                .requestMatchers("/api/incidenteLike/**").hasAuthority("USER")
+                        // Endpoints permitidos para usuarios con rol USER
+                        .requestMatchers("/api/incidenteLike/**").hasAuthority("USER")
 
-                .requestMatchers("/api/usuario/reset-password").authenticated()
-                
-                // Permitir el acceso para cualquier usuario autenticado
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );
+                        .requestMatchers("/api/usuario/reset-password").authenticated()
+
+                        // Permitir el acceso para cualquier usuario autenticado
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
