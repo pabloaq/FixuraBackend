@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Fixura.FixuraBackend.Service.Interface.IdepartamentoService;
-
+import com.Fixura.FixuraBackend.Model.Coordenada_Distrito;
 import com.Fixura.FixuraBackend.Model.Departamento;
 import com.Fixura.FixuraBackend.Model.Provincia;
 import com.Fixura.FixuraBackend.Model.Distrito;
@@ -58,5 +58,14 @@ public class DepartamentoService implements IdepartamentoService {
     }
     return list;
   }
-  
+  @Override
+  public List<Coordenada_Distrito> Listar_coordenadas_distrito(Integer id_distrito) {
+    List<Coordenada_Distrito> list;
+    try{
+      list = idistritoRepository.Listar_coordenadas_distrito(id_distrito);
+    }catch (Exception e) {
+      throw e;
+    }
+    return list;
+  }
 }

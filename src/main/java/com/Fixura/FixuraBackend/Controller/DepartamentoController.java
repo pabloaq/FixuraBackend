@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Fixura.FixuraBackend.Model.Coordenada_Distrito;
 import com.Fixura.FixuraBackend.Model.Departamento;
 import com.Fixura.FixuraBackend.Model.Provincia;
 import com.Fixura.FixuraBackend.Model.Distrito;
@@ -44,5 +45,11 @@ public class DepartamentoController {
     var result = idepartamentoService.Listar_distrito(id_prov);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
-  
+  @GetMapping("/distrito/coordenadas/{id_distrito}")
+  public ResponseEntity<List<Coordenada_Distrito>> Listar_coordenadas_distrito(
+    @PathVariable Integer id_distrito
+    ){
+    var result = idepartamentoService.Listar_coordenadas_distrito(id_distrito);
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
 }
