@@ -4,16 +4,17 @@ import java.sql.Timestamp;
 import lombok.Data;
 
 @Data
-public class Incidente {
+public class infoIncidente {
     int id_incidencia;
     Timestamp fecha_publicacion;
     String descripcion;
     String ubicacion;
     String imagen;
     int total_votos;
-    int id_estado;
-    String DNI;
-    int id_categoria;
-    double latitud;
-    double longitud;
+    String estado;
+    String usuario;
+    String categoria;
+    Double latitud;
+    Double longitud;
+    boolean tiene_like;
 }

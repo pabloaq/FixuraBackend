@@ -3,12 +3,15 @@ import org.springframework.stereotype.Service;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
 import com.Fixura.FixuraBackend.Model.UsuarioBlock;
+import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
+import com.Fixura.FixuraBackend.Model.infoIncidente;
 import com.Fixura.FixuraBackend.Repository.IncidenteRepository;
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 import com.Fixura.FixuraBackend.Util.JwtUtil;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
 @Service
 public class IncidenteService implements IincidenteService{
@@ -30,6 +33,45 @@ public class IncidenteService implements IincidenteService{
 		return list;
 	}
 
+	@Override
+	public Page<infoIncidente> page_incidente_usuario(int pageSize, int pageNumber, String dni) {
+		Page<infoIncidente> listPage;
+
+		try {
+			listPage = incidenteRepository.page_incidente_usuario(pageSize, pageNumber, dni);
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		return listPage;
+	}
+
+	@Override
+	public Page<infoIncidente> page_incidente_usuario_distrito(int pageSize, int pageNumber, String dni, int id_distrito) {
+		Page<infoIncidente> listPage;
+
+		try {
+			listPage = incidenteRepository.page_incidente_usuario_distrito(pageSize, pageNumber, dni, id_distrito);
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		return listPage;
+	}
+
+	@Override
+	public Page<infoIncidente> page_incidente_distrito(int pageSize, int pageNumber, int id_distrito) {
+		Page<infoIncidente> listPage;
+
+		try {
+			listPage = incidenteRepository.page_incidente_distrito(pageSize, pageNumber, id_distrito);
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		return listPage;
+	}
+
     @Override
 	public List<Incidente> Listar_incidente_Municipalidad(int distrito) {
 		List<Incidente> list;
@@ -40,7 +82,6 @@ public class IncidenteService implements IincidenteService{
 		}
 		return list;
 	}
-
 	@Override
 	public List<UsuarioBlock> Listar_usuarios_municipalidad(int id_distrito){
 		List<UsuarioBlock> list;
@@ -51,8 +92,26 @@ public class IncidenteService implements IincidenteService{
 		}
 		return list;
 	}
-
-
+	@Override
+	public List<IncidentesCoordenada> Listar_coordenadas_incidentes_Municipalidad(int distrito) {
+		List<IncidentesCoordenada> list;
+		try {
+			list=incidenteRepository.Listar_coordenadas_incidentes_Municipalidad(distrito);
+		}catch (Exception ex) {
+			throw ex;
+		}
+		return list;
+	}
+	@Override
+	public IncidentesCoordenada Listar_Coordenada_Incidente(int id_incidencia) {
+		IncidentesCoordenada coordenada_incidencia;
+		try {
+			coordenada_incidencia=incidenteRepository.Listar_Coordenada_Incidente(id_incidencia);
+		}catch (Exception ex) {
+			throw ex;
+		}
+		return coordenada_incidencia;
+	}
     @Override
 	public int save(Incidente incidente) {
 		int row;
@@ -135,4 +194,5 @@ public class IncidenteService implements IincidenteService{
 			throw new RuntimeException("Error al Actualizar incidencia con ID: "+ incidente.getId_incidencia());
 		}
 	}
+
 }

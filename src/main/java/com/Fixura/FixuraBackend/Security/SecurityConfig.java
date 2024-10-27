@@ -35,18 +35,20 @@ public class SecurityConfig {
                                 "/api/usuario/verification",
                                 "/api/usuario/verifyDni",
                                 "/api/usuario/forgot-password",
-                                "/api/usuario/reset-password")
-                        .permitAll()
+                                "/api/usuario/reset-password").permitAll()
+                        .requestMatchers("/api/incidente/list/paginated/usuario").permitAll()
+                        .requestMatchers("/api/incidente/list/paginated/usuario_distrito").permitAll()
+                        .requestMatchers("/api/incidente/list/paginated/distrito").permitAll()
 
                         .requestMatchers("/api/v1/departamento/**").permitAll()
-
+                        .requestMatchers("/api/incidente/list/usuario/**").permitAll()
+                        .requestMatchers("/api/incidente/list/municipalidad/**").permitAll()
+                        .requestMatchers("/api/incidente/list/coordenadas/**").permitAll()
+                        .requestMatchers("/api/incidente/list/coordenada/**").permitAll()
+                        .requestMatchers("/api/incidente/udpateIncidencia").permitAll()
                         // Endpoints permitidos para usuarios con rol ADMIN
-                        .requestMatchers("/api/admin/**",
-                                "/api/usuario/*/ban")
-                        .hasAuthority("ADMIN")
-
-                        // Endpoints permitidos para usuarios con rol MODERADOR
-                        .requestMatchers("/api/moderator/**").hasAuthority("MODERATOR")
+                        .requestMatchers("/api/admin/**", 
+                                         "/api/usuario/*/ban").hasAuthority("ADMIN")
 
                         // Endpoints permitidos para usuarios con rol USER
                         .requestMatchers("/api/incidenteLike/**").hasAuthority("USER")

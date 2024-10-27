@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.MediaType;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
+import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
 import com.Fixura.FixuraBackend.Model.UsuarioBlock;
+import com.Fixura.FixuraBackend.Model.infoIncidente;
+
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 
 import java.sql.Timestamp;
@@ -40,6 +44,43 @@ public class IncidenteController {
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 
+	@GetMapping("/list/paginated/usuario")
+	public ResponseEntity<Page<infoIncidente>> getIncidentesPorUsuario(
+			@RequestParam int page,
+			@RequestParam int size,
+			@RequestParam String dni) {
+		Page<infoIncidente> incidentes = iincidenteService.page_incidente_usuario(size, page, dni);
+		if (incidentes.getTotalElements() == 0) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 si no hay registros
+		}
+		return new ResponseEntity<>(incidentes, HttpStatus.OK);
+	}
+
+	@GetMapping("/list/paginated/usuario_distrito")
+	public ResponseEntity<Page<infoIncidente>> getIncidentesPorUsuarioDistrito(
+			@RequestParam int page,
+			@RequestParam int size,
+			@RequestParam String dni,
+			@RequestParam int id_distrito) {
+		Page<infoIncidente> incidentes = iincidenteService.page_incidente_usuario_distrito(size, page, dni, id_distrito);
+		if (incidentes.getTotalElements() == 0) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 si no hay registros
+		}
+		return new ResponseEntity<>(incidentes, HttpStatus.OK);
+	}
+
+	@GetMapping("/list/paginated/distrito")
+	public ResponseEntity<Page<infoIncidente>> getIncidentesPorDistrito(
+			@RequestParam int page,
+			@RequestParam int size,
+			@RequestParam int id_distrito) {
+		Page<infoIncidente> incidentes = iincidenteService.page_incidente_distrito(size, page, id_distrito);
+		if (incidentes.getTotalElements() == 0) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 si no hay registros
+		}
+		return new ResponseEntity<>(incidentes, HttpStatus.OK);
+	}
+
     @GetMapping("/list/municipalidad/{id_distrito}")
 	public ResponseEntity<List<Incidente>> list2(@PathVariable int id_distrito){
 		var result  = iincidenteService.Listar_incidente_Municipalidad(id_distrito);
@@ -56,7 +97,17 @@ public class IncidenteController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-    
+    @GetMapping("/list/coordenadas/{id_distrito}")
+	public ResponseEntity<List<IncidentesCoordenada>> list3(@PathVariable int id_distrito){
+		var result  = iincidenteService.Listar_coordenadas_incidentes_Municipalidad(id_distrito);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	@GetMapping("/list/coordenada/{id_incidente}")
+	public ResponseEntity<IncidentesCoordenada> list4(@PathVariable int id_incidente){
+		var result  = iincidenteService.Listar_Coordenada_Incidente(id_incidente);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+
     @PostMapping(value="/save")
 	public ResponseEntity<ServiceResponse> save(@RequestParam("fecha_publicacion") String fecha_publicacion,
 			@RequestParam("descripcion") String descripcion,
@@ -65,7 +116,9 @@ public class IncidenteController {
 			@RequestParam("total_votos") int total_votos,
             @RequestParam("id_estado") int id_estado,
             @RequestParam("DNI") String DNI,
-            @RequestParam("id_categoria") int id_categoria
+            @RequestParam("id_categoria") int id_categoria,
+			@RequestParam("latitud") double latitud,
+			@RequestParam("longitud") double longitud
             ) throws IOException, ParseException{
 			Incidente incidente= new Incidente();
 		ServiceResponse serviceResponse = new ServiceResponse();
@@ -79,7 +132,8 @@ public class IncidenteController {
         incidente.setId_estado(id_estado);
         incidente.setDNI(DNI);
         incidente.setId_categoria(id_categoria);
-
+		incidente.setLatitud(latitud);
+		incidente.setLongitud(longitud);
 		int result= iincidenteService.save(incidente);
 		if(result==1) {
 			serviceResponse.setMenssage("El producto se registro correctamente.");
