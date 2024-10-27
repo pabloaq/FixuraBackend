@@ -20,6 +20,7 @@ import com.Fixura.FixuraBackend.Util.JwtUtil;
 
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -234,6 +235,30 @@ public class UsuarioController {
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
   
-  
+   @PutMapping("/updatePerfil/Usuario")
+  public ResponseEntity<ServiceResponse> updatePefil(
+    @RequestParam("foto_perfil") String foto_perfil,
+    @RequestParam("id_distrito") int id_distrito,
+    @RequestParam("dni") String dni
+      ) {
+      ServiceResponse response = new ServiceResponse();
+      Usuario usuario = new Usuario();
+      usuario.setDNI(dni);
+      usuario.setId_distrito(id_distrito);
+      usuario.setFoto_perfil(foto_perfil);
+
+
+      boolean updated = iusuarioServicey.updatePerfilUsuario(usuario);
+
+      if (updated) {
+          response.setSuccess(true);
+          response.setMenssage("Perfil actualizado correctamente");
+      } else {
+          response.setSuccess(false);
+          response.setMenssage("Perfil no encontrado o no actualizado");
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      }
+      return ResponseEntity.ok(response);
+  }
   
 }

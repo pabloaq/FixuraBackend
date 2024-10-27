@@ -10,4 +10,5 @@ public interface IusuarioRepository {
   public Usuario findByCorreo(String correo);
   public int updateUsuario(Usuario usuario);
   public int updatePassword(String new_password, String correo);
+  public boolean updatePerfilUsuario(Usuario usuario);
 }
