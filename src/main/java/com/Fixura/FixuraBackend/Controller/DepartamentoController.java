@@ -45,11 +45,19 @@ public class DepartamentoController {
     var result = idepartamentoService.Listar_distrito(id_prov);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
+
   @GetMapping("/distrito/coordenadas/{id_distrito}")
   public ResponseEntity<List<Coordenada_Distrito>> Listar_coordenadas_distrito(
     @PathVariable Integer id_distrito
     ){
     var result = idepartamentoService.Listar_coordenadas_distrito(id_distrito);
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+
+  
+  @GetMapping("/distrito/{id_distrito}")
+  public ResponseEntity<Distrito> getDistrito(@PathVariable int id_distrito) {
+    var result = idepartamentoService.getNameDistrito(id_distrito);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 }

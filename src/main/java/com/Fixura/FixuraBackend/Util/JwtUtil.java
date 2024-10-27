@@ -36,7 +36,7 @@ public class JwtUtil {
                 .claim("dni", user.getDNI())
                 .claim("id_rol", user.getId_rol())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 6)) // 6 horas
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

@@ -12,4 +12,6 @@ public interface IdepartamentoService {
   public List<Provincia> Listar_provinvia(Integer id_depart);
   public List<Distrito> Listar_distrito(Integer id_prov);
   public List<Coordenada_Distrito> Listar_coordenadas_distrito(Integer id_distrito);
+  public Distrito getNameDistrito(int id_distrito);
+
 } 
