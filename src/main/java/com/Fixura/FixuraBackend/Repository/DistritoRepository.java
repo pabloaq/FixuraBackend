@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.Fixura.FixuraBackend.Model.Coordenada_Distrito;
 import com.Fixura.FixuraBackend.Model.Distrito;
 import com.Fixura.FixuraBackend.Repository.Interface.IdistritoRepository;
 
@@ -22,6 +23,12 @@ public class DistritoRepository implements IdistritoRepository{
     String SQL = "SELECT * FROM Distrito WHERE id_provincia = '"+ id_prov +"' ";
     return jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(Distrito.class));
   }
+  
+  @Override
+  public List<Coordenada_Distrito> Listar_coordenadas_distrito(Integer id_distrito) {
+    String SQL = "SELECT * FROM Coordenada_Distrito where id_distrito= '"+ id_distrito +"' ";
+    return jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(Coordenada_Distrito.class));
+  }
 
   @SuppressWarnings("deprecation")
   @Override
@@ -34,5 +41,5 @@ public class DistritoRepository implements IdistritoRepository{
           return null;
       }
   }
-  
+
 }
