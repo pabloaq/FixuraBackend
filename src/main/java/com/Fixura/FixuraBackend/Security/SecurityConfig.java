@@ -35,6 +35,7 @@ public class SecurityConfig {
                                 "/api/usuario/verification",
                                 "/api/usuario/verifyDni",
                                 "/api/usuario/forgot-password",
+                                "/api/usuario/updatePerfil/Usuario", 
                                 "/api/usuario/reset-password").permitAll()
                         .requestMatchers("/api/incidente/list/paginated/usuario").permitAll()
                         .requestMatchers("/api/incidente/list/paginated/usuario_distrito").permitAll()

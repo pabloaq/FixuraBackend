@@ -130,4 +130,13 @@ public class UsuarioService implements IusuarioService {
     String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail|outlook|hotmail)\\.(com|es|net)$";
     return email.matches(emailRegex);
   }
+
+  @Override
+  public boolean updatePerfilUsuario( Usuario user) {
+      try {
+          return usuarioRepository.updatePerfilUsuario(user);
+      } catch (Exception ex) {
+          throw new RuntimeException("Error al Actualizar usuario: " + ex);
+      }
+  }
 }
