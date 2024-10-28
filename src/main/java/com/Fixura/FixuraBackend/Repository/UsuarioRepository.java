@@ -71,4 +71,14 @@ public class UsuarioRepository implements IusuarioRepository{
     String SQL = "UPDATE Usuarios SET contrasenia = ? WHERE correo = ?";
     return jdbcTemplate.update(SQL, new_password, correo);
   }
+
+  @Override
+  public boolean updatePerfilUsuario(Usuario usuario) {
+    String SQL = "update usuarios set foto_perfil = ? , id_distrito = ? where dni = ?";
+    int result = jdbcTemplate.update(SQL, usuario.getFoto_perfil(), usuario.getId_distrito(), usuario.getDNI());
+    if (result == 0) {
+      throw new RuntimeException("No se pudo actualizar el usuario " );
+  }
+    return result > 0;
+  }
 }
