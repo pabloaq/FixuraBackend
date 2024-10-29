@@ -22,7 +22,9 @@ import org.springframework.http.MediaType;
 import com.Fixura.FixuraBackend.Model.Incidente;
 import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
+import com.Fixura.FixuraBackend.Model.UsuarioBlock;
 import com.Fixura.FixuraBackend.Model.infoIncidente;
+
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 
 import java.sql.Timestamp;
@@ -84,6 +86,17 @@ public class IncidenteController {
 		var result  = iincidenteService.Listar_incidente_Municipalidad(id_distrito);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
+
+	@GetMapping("/list/municipalidad/usuarios/{id_distrito}")
+	public ResponseEntity<List<UsuarioBlock>> getMethodName(@PathVariable int id_distrito) {
+		var result = iincidenteService.Listar_usuarios_municipalidad(id_distrito);
+
+		if (result.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
     @GetMapping("/list/coordenadas/{id_distrito}")
 	public ResponseEntity<List<IncidentesCoordenada>> list3(@PathVariable int id_distrito){
 		var result  = iincidenteService.Listar_coordenadas_incidentes_Municipalidad(id_distrito);
@@ -94,6 +107,7 @@ public class IncidenteController {
 		var result  = iincidenteService.Listar_Coordenada_Incidente(id_incidente);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
+
     @PostMapping(value="/save")
 	public ResponseEntity<ServiceResponse> save(@RequestParam("fecha_publicacion") String fecha_publicacion,
 			@RequestParam("descripcion") String descripcion,

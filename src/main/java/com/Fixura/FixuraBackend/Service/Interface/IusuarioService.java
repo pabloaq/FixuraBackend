@@ -10,5 +10,6 @@ public interface IusuarioService {
   public Usuario profile(String token);
   public boolean checkEmail(String email);
   public ApiDniResponse getNameUserByDNI(String DNI);
+  public int banUser(String dni, boolean isPermanent, String durationBan);
   public boolean updatePerfilUsuario(Usuario user);
 }

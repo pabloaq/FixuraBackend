@@ -7,6 +7,7 @@ import lombok.Data;
 public class Usuario {
   private String DNI;
   private String nombre;
+  private String apellido;
   private String correo;
   private String contrasenia;
   private String foto_perfil;

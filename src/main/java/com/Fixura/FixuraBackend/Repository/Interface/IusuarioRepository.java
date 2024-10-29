@@ -10,5 +10,6 @@ public interface IusuarioRepository {
   public Usuario findByCorreo(String correo);
   public int updateUsuario(Usuario usuario);
   public int updatePassword(String new_password, String correo);
+  public int banUser(String dni, boolean isPermanent, String durationBan);
   public boolean updatePerfilUsuario(Usuario usuario);
 }

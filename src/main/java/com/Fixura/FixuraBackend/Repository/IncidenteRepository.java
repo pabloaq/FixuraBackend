@@ -15,6 +15,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
+import com.Fixura.FixuraBackend.Model.UsuarioBlock;
+
 import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
 import com.Fixura.FixuraBackend.Model.infoIncidente;
 import com.Fixura.FixuraBackend.Repository.Interface.IincidenteRepository;
@@ -142,6 +144,12 @@ public class IncidenteRepository implements IincidenteRepository{
 		String sql = "select id_incidencia, latitud, longitud from incidencia where id_incidencia = ?";
 		return jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(IncidentesCoordenada.class), id_incidencia);
 	}
+	@Override
+	public List<UsuarioBlock> Listar_usuarios_municipalidad(int id_distrito){
+		String sql = "SELECT dni, nombre, apellido, correo FROM Usuarios WHERE Usuarios.id_distrito = ? AND Usuarios.apellido <> '' ORDER BY nombre";
+		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UsuarioBlock.class), id_distrito);
+	}
+
 	@Override
 	public int save(Incidente incidente) {
 		String sql = "INSERT INTO Incidencia(fecha_publicacion,descripcion,ubicacion,imagen,total_votos,id_estado,DNI,id_categoria,latitud,longitud) VALUES(?,?,?,?,?,?,?,?,?,?)";

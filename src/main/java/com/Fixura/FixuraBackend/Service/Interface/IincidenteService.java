@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.Fixura.FixuraBackend.Model.Incidente;
+import com.Fixura.FixuraBackend.Model.UsuarioBlock;
 import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
 import com.Fixura.FixuraBackend.Model.infoIncidente;
 
@@ -13,6 +14,7 @@ public interface IincidenteService {
     public Page<infoIncidente> page_incidente_usuario_distrito(int pageSize, int pageNumber, String dni, int id_distrito);
     public Page<infoIncidente> page_incidente_distrito(int pageSize, int pageNumber, int id_distrito);
     public List<Incidente> Listar_incidente_Municipalidad(int distrito);
+    public List<UsuarioBlock> Listar_usuarios_municipalidad(int id_distrito);
     public List<IncidentesCoordenada> Listar_coordenadas_incidentes_Municipalidad(int distrito);
     public IncidentesCoordenada Listar_Coordenada_Incidente(int id_incidencia);
 	public int save(Incidente incidente);
