@@ -146,7 +146,7 @@ public class IncidenteRepository implements IincidenteRepository{
 	}
 	@Override
 	public List<UsuarioBlock> Listar_usuarios_municipalidad(int id_distrito){
-		String sql = "SELECT dni, nombre, apellido, correo FROM Usuarios WHERE Usuarios.id_distrito = ? AND Usuarios.apellido <> ''";
+		String sql = "SELECT dni, nombre, apellido, correo FROM Usuarios WHERE Usuarios.id_distrito = ? AND Usuarios.apellido <> '' ORDER BY nombre";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UsuarioBlock.class), id_distrito);
 	}
 
