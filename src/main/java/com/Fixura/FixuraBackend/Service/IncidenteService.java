@@ -32,7 +32,16 @@ public class IncidenteService implements IincidenteService{
 		}
 		return list;
 	}
-
+	@Override
+	public infoIncidente Listar_incidente_porID(int id_incidente) {
+		infoIncidente incidente;
+		try {
+			incidente=incidenteRepository.Listar_incidente_porID(id_incidente);
+		}catch (Exception ex) {
+			throw ex;
+		}
+		return incidente;
+	}
 	@Override
 	public Page<infoIncidente> page_incidente_usuario(int pageSize, int pageNumber, String dni) {
 		Page<infoIncidente> listPage;

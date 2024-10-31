@@ -32,6 +32,12 @@ public class IncidenteRepository implements IincidenteRepository{
 		String sql = "select id_incidencia,fecha_publicacion,descripcion,ubicacion,imagen,total_votos,id_estado,id_categoria from Incidencia where DNI='"+dni+"' AND Incidencia.id_estado <> 4 ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
 	}
+	@Override
+	public infoIncidente Listar_incidente_porID(int id_incidente) {
+		String sql = "select incidencia.id_incidencia,incidencia.fecha_publicacion,incidencia.descripcion,incidencia.ubicacion,incidencia.imagen,incidencia.total_votos,estado.nombre as estado,usuarios.nombre as usuario,categoria.nombre as categoria,incidencia.latitud,incidencia.longitud from Incidencia inner join usuarios on incidencia.dni=usuarios.dni inner join estado on estado.id_estado=incidencia.id_estado inner join categoria on categoria.id_categoria=incidencia.id_categoria where id_incidencia=?";
+		return jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(infoIncidente.class), id_incidente);
+	}
+
 
 	@Override
 	public Page<infoIncidente> page_incidente_usuario(int pageSize, int pageNumber, String dni) {
@@ -86,7 +92,7 @@ public class IncidenteRepository implements IincidenteRepository{
 			INNER JOIN usuarios AS us ON inc.dni = us.dni
 			WHERE us.id_distrito = :id_distrito AND inc.id_estado <> 4
 			""";
-		
+
 		int totalRecords = namedParameterJdbcTemplate.queryForObject(countSql, params, Integer.class);
 
 		// Calcular el número total de páginas

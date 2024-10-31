@@ -43,7 +43,11 @@ public class IncidenteController {
 		var result  = iincidenteService.Listar_incidente_usuario(id);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
-
+	@GetMapping("/list/incidente_id/{id}")
+	public ResponseEntity<infoIncidente> list(@PathVariable int id){
+		var result  = iincidenteService.Listar_incidente_porID(id);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
 	@GetMapping("/list/paginated/usuario")
 	public ResponseEntity<Page<infoIncidente>> getIncidentesPorUsuario(
 			@RequestParam int page,
