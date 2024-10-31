@@ -11,8 +11,6 @@ import com.Fixura.FixuraBackend.Repository.Interface.IusuarioRepository;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Repository
 public class UsuarioRepository implements IusuarioRepository {
