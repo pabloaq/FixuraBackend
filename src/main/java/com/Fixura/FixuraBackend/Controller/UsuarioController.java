@@ -75,6 +75,9 @@ public class UsuarioController {
     try {
       AuthResponse authResponse = iusuarioServicey.login(user);
       return ResponseEntity.ok(authResponse);
+    } catch (RuntimeException e){
+      System.out.println(e.getMessage());
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);    
     } catch (Exception e) {
       return new ResponseEntity<>("Error al iniciar sesión", HttpStatus.UNAUTHORIZED);
     }
@@ -241,6 +244,7 @@ public class UsuarioController {
     String durationBan = (String) request.get("durationBan");
 
     int result = iusuarioServicey.banUser(dni, isPermanent, durationBan);
+    
     if (result > 0) {
       return ResponseEntity.ok("Usuario bloqueado exitosamente");
     } else {

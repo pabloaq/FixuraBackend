@@ -16,4 +16,5 @@ public class Usuario {
   private int id_distrito;
   private String token_verification;
   private boolean activo;
+  private boolean banned;
 }

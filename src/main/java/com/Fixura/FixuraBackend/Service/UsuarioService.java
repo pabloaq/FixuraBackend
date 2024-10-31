@@ -1,6 +1,8 @@
 package com.Fixura.FixuraBackend.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -58,6 +60,7 @@ public class UsuarioService implements IusuarioService {
     String token_email_verification = jwtUtil.generateEmailValidationToken(usuario);
     usuario.setToken_verification(token_email_verification);
     usuario.setActivo(false);
+    usuario.setBanned(false);
 
     // Guardamos el usuario
     try {
@@ -72,19 +75,25 @@ public class UsuarioService implements IusuarioService {
 
   @Override
   public AuthResponse login(Usuario user) {
-    try {
+    
+    Usuario userData = usuarioRepository.login(user.getCorreo());
+      
+    if (userData != null && passwordEncoder.matches(user.getContrasenia(), userData.getContrasenia())) {
 
-      Usuario userData = usuarioRepository.login(user.getCorreo());
+      if(userData.isBanned()){
+        if(userData.getTiempo_ban() != null){
+          throw new RuntimeException("Usuario baneado hasta: " + userData.getTiempo_ban());
+        }
+        else{
+          throw new RuntimeException("Cuenta bloqueada. Por favor, pónganse en contacto con el soporte técnico.");
+        }
+      }
 
-      if (userData != null && passwordEncoder.matches(user.getContrasenia(), userData.getContrasenia())) {
-        String token = jwtUtil.generateToken(userData);
-        return new AuthResponse(token);
-      } else
-        throw new RuntimeException("Credenciales inválidas");
+      String token = jwtUtil.generateToken(userData);
+      return new AuthResponse(token);
+    } else
+      throw new RuntimeException("Credenciales inválidas");
 
-    } catch (Exception e) {
-      throw new RuntimeException("Error al iniciar sesión");
-    }
   }
 
   @Override
