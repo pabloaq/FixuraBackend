@@ -109,4 +109,18 @@ public class UsuarioRepository implements IusuarioRepository {
   }
     return result > 0;
   }
+
+  @Override
+  public boolean unbanUser(String dni) {
+    String SQL = "UPDATE Usuarios SET tiempo_ban = NULL, banned = false WHERE dni = ?";
+    return (jdbcTemplate.update(SQL, dni)) > 0;
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean getBanStatus(String dni) {
+    String SQL = "SELECT banned FROM Usuarios WHERE dni = ?";
+    Boolean bannedStatus = jdbcTemplate.queryForObject(SQL, new Object[]{dni}, Boolean.class);
+    return bannedStatus != null && bannedStatus;
+  }
 }

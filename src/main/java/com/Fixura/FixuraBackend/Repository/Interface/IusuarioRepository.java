@@ -12,4 +12,6 @@ public interface IusuarioRepository {
   public int updatePassword(String new_password, String correo);
   public int banUser(String dni, boolean isPermanent, String durationBan);
   public boolean updatePerfilUsuario(Usuario usuario);
+  public boolean unbanUser(String dni);
+  public boolean getBanStatus(String dni);
 }

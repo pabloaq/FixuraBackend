@@ -252,7 +252,22 @@ public class UsuarioController {
     }
   }
 
+  @PostMapping("/{dni}/desban")
+  public ResponseEntity<?> desbanUser(@PathVariable String dni) {
+    if(iusuarioRepository.unbanUser(dni)){
+      return ResponseEntity.ok("Usuario desbloqueado exitosamente");
+    }else{
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al desbloquear el usuario");
+    }
+  }
 
+  @PostMapping("/{dni}/ban-status")
+  public ResponseEntity<Boolean> getBanStatus(@PathVariable String dni) {
+    boolean result = iusuarioServicey.getBanStatus(dni);
+    System.out.println("Valor devuelto: " + result);
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
+  
   @PutMapping("/updatePerfil/Usuario")
   public ResponseEntity<ServiceResponse> updatePefil(
     @RequestParam("foto_perfil") String foto_perfil,
