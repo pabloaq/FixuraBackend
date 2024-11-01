@@ -43,7 +43,11 @@ public class IncidenteController {
 		var result  = iincidenteService.Listar_incidente_usuario(id);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
-
+	@GetMapping("/list/incidente_id/{id}")
+	public ResponseEntity<infoIncidente> list(@PathVariable int id){
+		var result  = iincidenteService.Listar_incidente_porID(id);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
 	@GetMapping("/list/paginated/usuario")
 	public ResponseEntity<Page<infoIncidente>> getIncidentesPorUsuario(
 			@RequestParam int page,
@@ -75,6 +79,18 @@ public class IncidenteController {
 			@RequestParam int size,
 			@RequestParam int id_distrito) {
 		Page<infoIncidente> incidentes = iincidenteService.page_incidente_distrito(size, page, id_distrito);
+		if (incidentes.getTotalElements() == 0) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 si no hay registros
+		}
+		return new ResponseEntity<>(incidentes, HttpStatus.OK);
+	}
+
+	@GetMapping("/list/paginated/consolidado")
+	public ResponseEntity<Page<infoIncidente>> getConsolidadoPorDistrito(
+			@RequestParam int page,
+			@RequestParam int size,
+			@RequestParam int id_distrito) {
+		Page<infoIncidente> incidentes = iincidenteService.page_consolidado_distrito(size, page, id_distrito);
 		if (incidentes.getTotalElements() == 0) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 si no hay registros
 		}

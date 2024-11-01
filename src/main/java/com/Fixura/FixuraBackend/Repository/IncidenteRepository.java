@@ -32,6 +32,12 @@ public class IncidenteRepository implements IincidenteRepository{
 		String sql = "select id_incidencia,fecha_publicacion,descripcion,ubicacion,imagen,total_votos,id_estado,id_categoria from Incidencia where DNI='"+dni+"' AND Incidencia.id_estado <> 4 ORDER BY fecha_publicacion DESC";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Incidente.class));
 	}
+	@Override
+	public infoIncidente Listar_incidente_porID(int id_incidente) {
+		String sql = "select incidencia.id_incidencia,incidencia.fecha_publicacion,incidencia.descripcion,incidencia.ubicacion,incidencia.imagen,incidencia.total_votos,estado.nombre as estado,usuarios.nombre as usuario,categoria.nombre as categoria,incidencia.latitud,incidencia.longitud from Incidencia inner join usuarios on incidencia.dni=usuarios.dni inner join estado on estado.id_estado=incidencia.id_estado inner join categoria on categoria.id_categoria=incidencia.id_categoria where id_incidencia=?";
+		return jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(infoIncidente.class), id_incidente);
+	}
+
 
 	@Override
 	public Page<infoIncidente> page_incidente_usuario(int pageSize, int pageNumber, String dni) {
@@ -86,7 +92,7 @@ public class IncidenteRepository implements IincidenteRepository{
 			INNER JOIN usuarios AS us ON inc.dni = us.dni
 			WHERE us.id_distrito = :id_distrito AND inc.id_estado <> 4
 			""";
-		
+
 		int totalRecords = namedParameterJdbcTemplate.queryForObject(countSql, params, Integer.class);
 
 		// Calcular el número total de páginas
@@ -116,6 +122,39 @@ public class IncidenteRepository implements IincidenteRepository{
 			SELECT COUNT(*) 
 			FROM incidencia AS inc
 			INNER JOIN usuarios AS us ON inc.dni = us.dni
+			WHERE us.id_distrito = :id_distrito AND inc.id_estado <> 4
+			""";
+		
+		int totalRecords = namedParameterJdbcTemplate.queryForObject(countSql, params, Integer.class);
+
+		// Calcular el número total de páginas
+		long totalPages = (long) Math.ceil((double) totalRecords / pageSize);
+
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+		return new PageImpl<>(result, pageable, totalPages);
+	}
+
+	@Override
+	public Page<infoIncidente> page_consolidado_distrito(int pageSize, int pageNumber, int id_distrito) {
+		String sql = "SELECT * FROM lista_consolidado_distrito(:id_distrito, :pageSize, :offset)";
+
+		int offset = pageNumber * pageSize; // Calcula el desplazamiento para la paginación
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("id_distrito", id_distrito);
+		params.put("pageSize", pageSize);
+		params.put("offset", offset);
+
+		NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+
+		List<infoIncidente> result = namedParameterJdbcTemplate.query(sql, params, BeanPropertyRowMapper.newInstance(infoIncidente.class));
+
+		String countSql = """
+			SELECT COUNT(*) 
+			FROM incidencia_consolidado AS incco
+			INNER JOIN usuarios AS us ON incco.dni = us.dni
+			INNER JOIN incidencia AS inc ON inc.id_incidencia = incco.id_incidencia
 			WHERE us.id_distrito = :id_distrito AND inc.id_estado <> 4
 			""";
 		

@@ -32,7 +32,16 @@ public class IncidenteService implements IincidenteService{
 		}
 		return list;
 	}
-
+	@Override
+	public infoIncidente Listar_incidente_porID(int id_incidente) {
+		infoIncidente incidente;
+		try {
+			incidente=incidenteRepository.Listar_incidente_porID(id_incidente);
+		}catch (Exception ex) {
+			throw ex;
+		}
+		return incidente;
+	}
 	@Override
 	public Page<infoIncidente> page_incidente_usuario(int pageSize, int pageNumber, String dni) {
 		Page<infoIncidente> listPage;
@@ -65,6 +74,19 @@ public class IncidenteService implements IincidenteService{
 
 		try {
 			listPage = incidenteRepository.page_incidente_distrito(pageSize, pageNumber, id_distrito);
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		return listPage;
+	}
+
+	@Override
+	public Page<infoIncidente> page_consolidado_distrito(int pageSize, int pageNumber, int id_distrito) {
+		Page<infoIncidente> listPage;
+
+		try {
+			listPage = incidenteRepository.page_consolidado_distrito(pageSize, pageNumber, id_distrito);
 		} catch (Exception ex) {
 			throw ex;
 		}
