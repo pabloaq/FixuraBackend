@@ -11,7 +11,7 @@ import com.Fixura.FixuraBackend.Repository.Interface.IincidenciaLikeRepository;
 public class IncidenciaLikeRepository implements IincidenciaLikeRepository{
 
     @Autowired
-  private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public boolean insertLike(IncidenciaLike incidenciaLike) {
