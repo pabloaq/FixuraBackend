@@ -12,4 +12,5 @@ public interface IusuarioService {
   public ApiDniResponse getNameUserByDNI(String DNI);
   public int banUser(String dni, boolean isPermanent, String durationBan);
   public boolean updatePerfilUsuario(Usuario user);
+  public boolean getBanStatus(String dni);
 }

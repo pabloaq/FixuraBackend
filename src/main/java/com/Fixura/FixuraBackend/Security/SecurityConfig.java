@@ -51,7 +51,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/incidente/udpateIncidencia").permitAll()
                         // Endpoints permitidos para usuarios con rol ADMIN
                         .requestMatchers("/api/admin/**", 
-                                         "/api/usuario/*/ban").hasAuthority("ADMIN")
+                                         "/api/usuario/*/ban",
+                                         "/api/usuario/*/desban",
+                                         "/api/usuario/*/ban-status").hasAuthority("ADMIN")
 
                         // Endpoints permitidos para usuarios con rol USER
                         .requestMatchers("/api/incidenteLike/**").hasAuthority("USER")

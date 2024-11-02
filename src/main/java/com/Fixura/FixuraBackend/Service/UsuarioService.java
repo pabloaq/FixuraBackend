@@ -1,5 +1,7 @@
 package com.Fixura.FixuraBackend.Service;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,7 @@ public class UsuarioService implements IusuarioService {
     String token_email_verification = jwtUtil.generateEmailValidationToken(usuario);
     usuario.setToken_verification(token_email_verification);
     usuario.setActivo(false);
+    usuario.setBanned(false);
 
     // Guardamos el usuario
     try {
@@ -72,19 +75,30 @@ public class UsuarioService implements IusuarioService {
 
   @Override
   public AuthResponse login(Usuario user) {
-    try {
+    Usuario userData = usuarioRepository.login(user.getCorreo());
 
-      Usuario userData = usuarioRepository.login(user.getCorreo());
-
-      if (userData != null && passwordEncoder.matches(user.getContrasenia(), userData.getContrasenia())) {
-        String token = jwtUtil.generateToken(userData);
-        return new AuthResponse(token);
-      } else
-        throw new RuntimeException("Credenciales inválidas");
-
-    } catch (Exception e) {
-      throw new RuntimeException("Error al iniciar sesión");
+    if (userData == null) {
+      throw new RuntimeException("Credenciales inválidas");
     }
+
+    if (!passwordEncoder.matches(user.getContrasenia(), userData.getContrasenia())) {
+      throw new RuntimeException("Contraseña incorrecta");
+    }
+
+    if (userData.isBanned()) {
+      if (userData.getTiempo_ban() != null) {
+        if (userData.getTiempo_ban().after(new Date())) {
+          throw new RuntimeException("Usuario baneado hasta: " + userData.getTiempo_ban());
+        } else {
+          usuarioRepository.unbanUser(userData.getDNI());
+        }
+      } else {
+        throw new RuntimeException("Cuenta bloqueada. Por favor, pónganse en contacto con el soporte técnico.");
+      }
+    }
+
+    String token = jwtUtil.generateToken(userData);
+    return new AuthResponse(token);
   }
 
   @Override
@@ -132,11 +146,22 @@ public class UsuarioService implements IusuarioService {
   }
 
   @Override
-  public boolean updatePerfilUsuario( Usuario user) {
-      try {
-          return usuarioRepository.updatePerfilUsuario(user);
-      } catch (Exception ex) {
-          throw new RuntimeException("Error al Actualizar usuario: " + ex);
-      }
+  public boolean updatePerfilUsuario(Usuario user) {
+    try {
+      return usuarioRepository.updatePerfilUsuario(user);
+    } catch (Exception ex) {
+      throw new RuntimeException("Error al Actualizar usuario: " + ex);
+    }
   }
+
+  @Override
+  public boolean getBanStatus(String dni) {
+    try {
+      System.out.println(dni);
+      return usuarioRepository.getBanStatus(dni);
+    } catch (Exception ex) {
+      throw new RuntimeException("Error al obtener el estado de baneo del usuario");
+    }
+  }
+
 }
