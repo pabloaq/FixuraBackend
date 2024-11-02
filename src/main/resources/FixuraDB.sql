@@ -170,6 +170,7 @@ RETURNS TABLE (
     total_votos INT,
     estado VARCHAR,
     usuario VARCHAR,
+    usuario_foto VARCHAR,
     categoria VARCHAR,
     latitud DECIMAL,
     longitud DECIMAL,
@@ -180,7 +181,9 @@ BEGIN
     RETURN QUERY
     SELECT inc.id_incidencia, inc.fecha_publicacion, inc.descripcion,
            inc.ubicacion, inc.imagen, inc.total_votos, est.nombre AS estado,
-           us.nombre AS usuario, cat.nombre AS categoria, inc.latitud, inc.longitud,
+           us.nombre AS usuario, 
+           us.foto_perfil AS usuario_foto,
+           cat.nombre AS categoria, inc.latitud, inc.longitud,
            CASE 
                WHEN il.id_incidencia IS NOT NULL THEN TRUE
                ELSE FALSE
@@ -212,6 +215,7 @@ RETURNS TABLE (
     total_votos INT,
     estado VARCHAR,
     usuario VARCHAR,
+    usuario_foto VARCHAR,
     categoria VARCHAR,
     latitud DECIMAL,
     longitud DECIMAL,
@@ -222,7 +226,9 @@ BEGIN
     RETURN QUERY
     SELECT inc.id_incidencia, inc.fecha_publicacion, inc.descripcion,
 	   inc.ubicacion, inc.imagen, inc.total_votos, est.nombre AS estado,
-	   us.nombre AS usuario, cat.nombre AS categoria, inc.latitud, inc.longitud,
+	   us.nombre AS usuario, 
+       us.foto_perfil AS usuario_foto,
+       cat.nombre AS categoria, inc.latitud, inc.longitud,
 	   CASE 
            WHEN il.id_incidencia IS NOT NULL THEN TRUE
            ELSE FALSE
@@ -253,6 +259,7 @@ RETURNS TABLE (
     total_votos INT,
     estado VARCHAR,
     usuario VARCHAR,
+    usuario_foto VARCHAR,
     categoria VARCHAR,
     latitud DECIMAL,
     longitud DECIMAL,
@@ -263,8 +270,10 @@ BEGIN
     RETURN QUERY
     SELECT inc.id_incidencia, inc.fecha_publicacion, inc.descripcion,
 	   inc.ubicacion, inc.imagen, inc.total_votos, est.nombre AS estado,
-	   us.nombre AS usuario, cat.nombre AS categoria, inc.latitud, inc.longitud,
-	    COALESCE(tiene_like, false)
+	   us.nombre AS usuario, 
+       us.foto_perfil AS usuario_foto,
+       cat.nombre AS categoria, inc.latitud, inc.longitud,
+       COALESCE(tiene_like, false)
 	FROM incidencia AS inc
 	INNER JOIN usuarios AS us ON us.dni = inc.dni
 	INNER JOIN estado AS est ON est.id_estado = inc.id_estado
@@ -290,6 +299,7 @@ RETURNS TABLE (
     total_votos INT,
     estado VARCHAR,
     usuario VARCHAR,
+    usuario_foto VARCHAR,
     categoria VARCHAR,
     latitud DECIMAL,
     longitud DECIMAL,
@@ -299,8 +309,10 @@ AS $$
 BEGIN
     RETURN QUERY
     SELECT inc.id_incidencia, inc.fecha_publicacion, inc.descripcion,
-	   inc.ubicacion, inc.imagen, inc.total_votos, est.nombre AS estado,
-	   us.nombre AS usuario, cat.nombre AS categoria, inc.latitud, inc.longitud,
+        inc.ubicacion, inc.imagen, inc.total_votos, est.nombre AS estado,
+        us.nombre AS usuario, 
+        us.foto_perfil AS usuario_foto,
+        cat.nombre AS categoria, inc.latitud, inc.longitud,
 	    COALESCE(tiene_like, false)
 	FROM incidencia_consolidado AS incco
 	INNER JOIN incidencia AS inc ON inc.id_incidencia = incco.id_incidencia
