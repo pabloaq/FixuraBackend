@@ -216,5 +216,14 @@ public class IncidenteService implements IincidenteService{
 			throw new RuntimeException("Error al Actualizar incidencia con ID: "+ incidente.getId_incidencia());
 		}
 	}
-
+	@Override
+	public Page<infoIncidente> Listar_incidente_masVotados(int pageSize, int pageNumber, int id_distrito){
+		Page<infoIncidente> listpage;
+		try {
+			listpage = incidenteRepository.Listar_incidente_masVotados(pageSize,pageNumber,id_distrito);
+		} catch (Exception ex) {
+			throw new RuntimeException("Error al listar las incidencias más votadas", ex);
+		}
+		return listpage;
+	}
 }

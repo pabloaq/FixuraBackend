@@ -26,4 +26,5 @@ public interface IincidenteService {
     public int get_total_votos(String token, int id_incidencia);
     public String get_name_user(String token, int id_incidencia);
     public boolean update_incidente(String token, Incidente incidente);
+    public Page<infoIncidente> Listar_incidente_masVotados(int pageSize, int pageNumber, int id_distrito);
 }

@@ -26,4 +26,5 @@ public interface IincidenteRepository {
     public int get_total_votos(int id_incidencia);
     public String get_name_user(int id_incidencia);
     public boolean update_incidente(Incidente incidente);
+    public Page<infoIncidente> Listar_incidente_masVotados(int pageSize, int pageNumber, int id_distrito);
 }

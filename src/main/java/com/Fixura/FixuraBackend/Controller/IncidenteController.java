@@ -261,4 +261,20 @@ public class IncidenteController {
 		}
 		return ResponseEntity.ok(response);
     }
+	@GetMapping("/list/paginated/masVotados")
+	public ResponseEntity<Page<infoIncidente>> getIncidentesMasVotados(
+        @RequestParam int page,
+        @RequestParam int size,
+		@RequestParam int id_distrito) {
+        try {
+            Page<infoIncidente> incidentes = iincidenteService.Listar_incidente_masVotados(size, page, id_distrito);
+            if (incidentes.hasContent()) {
+                return new ResponseEntity<>(incidentes, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
