@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/incidente/list/coordenadas/**").permitAll()
                         .requestMatchers("/api/incidente/list/coordenada/**").permitAll()
                         .requestMatchers("/api/incidente/udpateIncidencia").permitAll()
+                        .requestMatchers("/api/incidente/list/paginated/masVotados").permitAll()
                         // Endpoints permitidos para usuarios con rol ADMIN
                         .requestMatchers("/api/admin/**", 
                                          "/api/usuario/*/ban",

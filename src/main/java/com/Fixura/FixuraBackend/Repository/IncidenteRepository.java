@@ -271,5 +271,41 @@ public class IncidenteRepository implements IincidenteRepository{
 		}
 		return result > 0;
 	}
+	@Override
+	public Page<infoIncidente> Listar_incidente_masVotados(int pageSize, int pageNumber, int id_distrito) {
+		try {
+			String sql = "SELECT * FROM lista_incidente_distrito_masVotos(:id_distrito, :pageSize, :offset)";
+
+		int offset = pageNumber * pageSize;  // Calcula el desplazamiento
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("id_distrito", id_distrito);
+		params.put("pageSize", pageSize);
+		params.put("offset", offset);
+
+		NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+
+		// Ejecuta la consulta y mapea los resultados a infoIncidente
+		List<infoIncidente> result = namedParameterJdbcTemplate.query(sql, params, BeanPropertyRowMapper.newInstance(infoIncidente.class));
+
+		// Consulta para contar el número total de registros
+		String countSql = """
+		SELECT COUNT(*) 
+		FROM incidencia AS inc
+		INNER JOIN usuarios AS us ON inc.dni = us.dni  
+		WHERE us.id_distrito = :id_distrito AND id_estado <> 4
+		""";
+		int totalRecords = namedParameterJdbcTemplate.queryForObject(countSql, params, Integer.class);
+
+		// Crea el objeto Pageable y PageImpl para manejar la paginación
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		return new PageImpl<>(result, pageable, totalRecords);
+		} catch (Exception e) {
+			// Registrar el error
+			System.err.println("Error al listar incidencias más votadas: " + e.getMessage());
+			// Lanza una excepción personalizada o maneja el error adecuadamente
+			throw new RuntimeException("Error al obtener las incidencias más votadas", e);
+		}
+	}
 
 }

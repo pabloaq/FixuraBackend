@@ -284,7 +284,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Función para obtener incidencias de un distrito sin verificación de likes (consolidado-incidencia)
+-- Función para obtener incidencias de un distrito sin verificación de likes (muro-administrador) por orden de likes
 CREATE OR REPLACE FUNCTION lista_consolidado_distrito(
 	p_distrito INT,
     p_limit INT, 
@@ -324,7 +324,53 @@ BEGIN
 	LIMIT p_limit OFFSET p_offset;
 END;
 $$ LANGUAGE plpgsql;
-
+Funcion para ordenar 
+CREATE OR REPLACE FUNCTION lista_incidente_distrito_masVotos(
+    p_distrito INT,
+    p_limit INT, 
+    p_offset INT
+)
+RETURNS TABLE (
+    id_incidencia INT,
+    fecha_publicacion TIMESTAMP,
+    descripcion VARCHAR,
+    ubicacion VARCHAR,
+    imagen VARCHAR,
+    total_votos INT,
+    estado VARCHAR,
+    usuario VARCHAR,
+    usuario_foto VARCHAR,
+    categoria VARCHAR,
+    latitud DECIMAL,
+    longitud DECIMAL,
+    tiene_like BOOLEAN
+) 
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        inc.id_incidencia, 
+        inc.fecha_publicacion, 
+        inc.descripcion,
+        inc.ubicacion, 
+        inc.imagen, 
+        inc.total_votos, 
+        est.nombre AS estado,
+        us.nombre AS usuario, 
+        us.foto_perfil AS usuario_foto,
+        cat.nombre AS categoria, 
+        inc.latitud, 
+        inc.longitud,
+        COALESCE(tiene_like, false)
+    FROM incidencia AS inc
+    INNER JOIN usuarios AS us ON us.dni = inc.dni
+    INNER JOIN estado AS est ON est.id_estado = inc.id_estado
+    INNER JOIN categoria AS cat ON cat.id_categoria = inc.id_categoria
+    WHERE us.id_distrito = p_distrito AND inc.id_estado <> 4
+    ORDER BY total_votos DESC -- Ordenar por total_votos de forma descendente
+    LIMIT p_limit OFFSET p_offset;
+END;
+$$ LANGUAGE plpgsql;
 INSERT INTO Rol (nombre) VALUES ('ADMINISTRADOR');
 INSERT INTO Rol (nombre) VALUES ('MODERADOR');
 INSERT INTO Rol (nombre) VALUES ('USUARIO');
