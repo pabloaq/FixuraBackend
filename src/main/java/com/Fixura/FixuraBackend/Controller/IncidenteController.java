@@ -24,7 +24,7 @@ import com.Fixura.FixuraBackend.Model.IncidentesCoordenada;
 import com.Fixura.FixuraBackend.Model.ServiceResponse;
 import com.Fixura.FixuraBackend.Model.UsuarioBlock;
 import com.Fixura.FixuraBackend.Model.infoIncidente;
-
+import com.Fixura.FixuraBackend.Service.WebSocketService;
 import com.Fixura.FixuraBackend.Service.Interface.IincidenteService;
 
 import java.sql.Timestamp;
@@ -37,17 +37,22 @@ public class IncidenteController {
 
     @Autowired
 	private IincidenteService iincidenteService;
-    
-    @GetMapping("/list/usuario/{id}")
-	public ResponseEntity<List<Incidente>> list(@PathVariable String id){
-		var result  = iincidenteService.Listar_incidente_usuario(id);
-		return new ResponseEntity<>(result,HttpStatus.OK);
+
+	@Autowired
+	private WebSocketService webSocketService;
+
+	@GetMapping("/list/usuario/{id}")
+	public ResponseEntity<List<Incidente>> list(@PathVariable String id) {
+		var result = iincidenteService.Listar_incidente_usuario(id);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+
 	@GetMapping("/list/incidente_id/{id}")
-	public ResponseEntity<infoIncidente> list(@PathVariable int id){
-		var result  = iincidenteService.Listar_incidente_porID(id);
-		return new ResponseEntity<>(result,HttpStatus.OK);
+	public ResponseEntity<infoIncidente> list(@PathVariable int id) {
+		var result = iincidenteService.Listar_incidente_porID(id);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+
 	@GetMapping("/list/paginated/usuario")
 	public ResponseEntity<Page<infoIncidente>> getIncidentesPorUsuario(
 			@RequestParam int page,
@@ -97,10 +102,10 @@ public class IncidenteController {
 		return new ResponseEntity<>(incidentes, HttpStatus.OK);
 	}
 
-    @GetMapping("/list/municipalidad/{id_distrito}")
-	public ResponseEntity<List<Incidente>> list2(@PathVariable int id_distrito){
-		var result  = iincidenteService.Listar_incidente_Municipalidad(id_distrito);
-		return new ResponseEntity<>(result,HttpStatus.OK);
+	@GetMapping("/list/municipalidad/{id_distrito}")
+	public ResponseEntity<List<Incidente>> list2(@PathVariable int id_distrito) {
+		var result = iincidenteService.Listar_incidente_Municipalidad(id_distrito);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@GetMapping("/list/municipalidad/usuarios/{id_distrito}")
@@ -113,49 +118,52 @@ public class IncidenteController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-    @GetMapping("/list/coordenadas/{id_distrito}")
-	public ResponseEntity<List<IncidentesCoordenada>> list3(@PathVariable int id_distrito){
-		var result  = iincidenteService.Listar_coordenadas_incidentes_Municipalidad(id_distrito);
-		return new ResponseEntity<>(result,HttpStatus.OK);
-	}
-	@GetMapping("/list/coordenada/{id_incidente}")
-	public ResponseEntity<IncidentesCoordenada> list4(@PathVariable int id_incidente){
-		var result  = iincidenteService.Listar_Coordenada_Incidente(id_incidente);
-		return new ResponseEntity<>(result,HttpStatus.OK);
+	@GetMapping("/list/coordenadas/{id_distrito}")
+	public ResponseEntity<List<IncidentesCoordenada>> list3(@PathVariable int id_distrito) {
+		var result = iincidenteService.Listar_coordenadas_incidentes_Municipalidad(id_distrito);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-    @PostMapping(value="/save")
+	@GetMapping("/list/coordenada/{id_incidente}")
+	public ResponseEntity<IncidentesCoordenada> list4(@PathVariable int id_incidente) {
+		var result = iincidenteService.Listar_Coordenada_Incidente(id_incidente);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/save")
 	public ResponseEntity<ServiceResponse> save(@RequestParam("fecha_publicacion") String fecha_publicacion,
 			@RequestParam("descripcion") String descripcion,
 			@RequestParam("ubicacion") String ubicacion,
-            @RequestParam("imagen") String  imagen,
+			@RequestParam("imagen") String imagen,
 			@RequestParam("total_votos") int total_votos,
-            @RequestParam("id_estado") int id_estado,
-            @RequestParam("DNI") String DNI,
-            @RequestParam("id_categoria") int id_categoria,
+			@RequestParam("id_estado") int id_estado,
+			@RequestParam("DNI") String DNI,
+			@RequestParam("id_categoria") int id_categoria,
 			@RequestParam("latitud") double latitud,
-			@RequestParam("longitud") double longitud
-            ) throws IOException, ParseException{
-			Incidente incidente= new Incidente();
+			@RequestParam("longitud") double longitud) throws IOException, ParseException {
+		Incidente incidente = new Incidente();
 		ServiceResponse serviceResponse = new ServiceResponse();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        Timestamp timestamp = new Timestamp(dateFormat.parse(fecha_publicacion).getTime());
-        incidente.setFecha_publicacion(timestamp);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		Timestamp timestamp = new Timestamp(dateFormat.parse(fecha_publicacion).getTime());
+		incidente.setFecha_publicacion(timestamp);
 		incidente.setDescripcion(descripcion);
 		incidente.setUbicacion(ubicacion);
-        incidente.setImagen(imagen);
+		incidente.setImagen(imagen);
 		incidente.setTotal_votos(total_votos);
-        incidente.setId_estado(id_estado);
-        incidente.setDNI(DNI);
-        incidente.setId_categoria(id_categoria);
+		incidente.setId_estado(id_estado);
+		incidente.setDNI(DNI);
+		incidente.setId_categoria(id_categoria);
 		incidente.setLatitud(latitud);
 		incidente.setLongitud(longitud);
-		int result= iincidenteService.save(incidente);
-		if(result==1) {
+		int result = iincidenteService.save(incidente);
+		if (result == 1) {
 			serviceResponse.setMenssage("El producto se registro correctamente.");
+
+			webSocketService.enviarNotificacion("Nuevo incidente registrado");
+			webSocketService.refreshIncidencias(incidente);
 		}
 
-		return new ResponseEntity<>(serviceResponse,HttpStatus.OK);
+		return new ResponseEntity<>(serviceResponse, HttpStatus.OK);
 	}
 
     @PostMapping(value="/update_estado",consumes=MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
@@ -192,22 +200,25 @@ public class IncidenteController {
 		return new ResponseEntity<>(serviceResponse,HttpStatus.OK);
 	}
 
-    @PutMapping("/delete/{idIncidencia}")
+	@PutMapping("/delete/{idIncidencia}")
 	public ResponseEntity<ServiceResponse> deleteIncidencia(
-		@RequestHeader("Authorization") String token,
-		@PathVariable int idIncidencia
-		){
+			@RequestHeader("Authorization") String token,
+			@PathVariable int idIncidencia) {
+
+		Incidente incidente = new Incidente();
 		ServiceResponse response = new ServiceResponse();
 
 		boolean result = iincidenteService.delete(token, idIncidencia);
+		incidente.setId_incidencia(idIncidencia);
+		webSocketService.refreshIncidencias(incidente);
 
 		if (result) {
 			response.setSuccess(true);
-        	response.setMenssage("Incidente eliminado correctamente");
+			response.setMenssage("Incidente eliminado correctamente");
 		} else {
 			response.setSuccess(false);
-        	response.setMenssage("Incidente no encontrado o no eliminado");
-        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+			response.setMenssage("Incidente no encontrado o no eliminado");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 		return ResponseEntity.ok(response);
 	}
