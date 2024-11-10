@@ -324,7 +324,8 @@ BEGIN
 	LIMIT p_limit OFFSET p_offset;
 END;
 $$ LANGUAGE plpgsql;
-Funcion para ordenar 
+
+--Funcion para ordenar 
 CREATE OR REPLACE FUNCTION lista_incidente_distrito_masVotos(
     p_distrito INT,
     p_limit INT, 
@@ -371,6 +372,7 @@ BEGIN
     LIMIT p_limit OFFSET p_offset;
 END;
 $$ LANGUAGE plpgsql;
+
 INSERT INTO Rol (nombre) VALUES ('ADMINISTRADOR');
 INSERT INTO Rol (nombre) VALUES ('MODERADOR');
 INSERT INTO Rol (nombre) VALUES ('USUARIO');
@@ -477,14 +479,14 @@ INSERT INTO Coordenada_Distrito (latitud, longitud, id_distrito) VALUES ( -8.078
 INSERT INTO Coordenada_Distrito (latitud, longitud, id_distrito) VALUES ( -8.079626, -79.029976, 2);
 INSERT INTO Coordenada_Distrito (latitud, longitud, id_distrito) VALUES ( -8.079640, -79.031844, 2);
 
-INSERT INTO Usuarios VALUES ('32542163','Municipalidad Distrital de Florencia de Mora',
-'ConsejoFlorencia@hotmail.com','$2a$10$B8vL0Pb3h/y9RsyVL5D9Z.sqWh6YPoS6NmV29OQy2sBjYpxp9ovRG','asdasd.jpg',NULL,1,2,NULL,true);
-INSERT INTO Usuarios VALUES ('48264723','Juan Rodrigues',
-'juanrodrigues@hotmail.com','$2a$10$j3OpqR.jwe83sQSUJpBzLe9XNR7ixgZdgW8KlGGSzWnhGZyfbbno2','asdasd.jpg',NULL,2,2,NULL,true);
-INSERT INTO Usuarios VALUES ('21443227','Antony Lujan',
-'antonylujan@hotmail.com','$2a$10$qiFEYY..M21DKwLNWxw.dewSw5/EA/9ee8EE6pvPzKn68wHX/lXtO','asdasd.jpg',NULL,3,2,NULL,true);
-INSERT INTO Usuarios VALUES ('74390812','Harold Alvarez',
-'haroldalvarez@hotmail.com','$2a$10$r1ZEETRx1jIhOYqSHNM1UORaRSjn5fX9y6RpzcSsHUh/QaiMtRMvq','asdasd.jpg',NULL,3,2,NULL,true);
+INSERT INTO Usuarios VALUES ('32542163','Mario', 'Cortez',
+'ConsejoTrujillo@hotmail.com','$2a$10$B8vL0Pb3h/y9RsyVL5D9Z.sqWh6YPoS6NmV29OQy2sBjYpxp9ovRG','asdasd.jpg',NULL,1,1,NULL,true, false);
+INSERT INTO Usuarios VALUES ('48264723','Juan', 'Rodrigues',
+'juanrodrigues@hotmail.com','$2a$10$j3OpqR.jwe83sQSUJpBzLe9XNR7ixgZdgW8KlGGSzWnhGZyfbbno2','https://raw.githubusercontent.com/KevinGM02/Galeria-Imagenes-Fixura/main/imagenes/foto_perfil_default.png',NULL,2,1,NULL,true, false);
+INSERT INTO Usuarios VALUES ('21443227','Antony', 'Lujan',
+'antonylujan@hotmail.com','$2a$10$qiFEYY..M21DKwLNWxw.dewSw5/EA/9ee8EE6pvPzKn68wHX/lXtO','https://raw.githubusercontent.com/KevinGM02/Galeria-Imagenes-Fixura/main/imagenes/foto_perfil_default.png',NULL,3,1,NULL,true, false);
+INSERT INTO Usuarios VALUES ('74390812','Harold', 'Alvarez',
+'haroldalvarez@hotmail.com','$2a$10$r1ZEETRx1jIhOYqSHNM1UORaRSjn5fX9y6RpzcSsHUh/QaiMtRMvq','https://raw.githubusercontent.com/KevinGM02/Galeria-Imagenes-Fixura/main/imagenes/foto_perfil_default.png',NULL,3,1,NULL,true, false);
 
 INSERT INTO Incidencia (fecha_publicacion,descripcion,ubicacion,imagen,total_votos,id_estado,DNI,id_categoria, latitud, longitud) 
 VALUES ('2024-10-03 15:30:00','Se ha producido un corte de suministro eléctrico en la zona desde las 15:30 horas. Los vecinos han notado que la luz se apagó repentinamente y no ha vuelto desde entonces.','3 De Octubre 809, Florencia de Mora 13002',
