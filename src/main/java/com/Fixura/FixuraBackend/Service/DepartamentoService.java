@@ -9,6 +9,7 @@ import com.Fixura.FixuraBackend.Service.Interface.IdepartamentoService;
 import com.Fixura.FixuraBackend.Model.Coordenada_Distrito;
 import com.Fixura.FixuraBackend.Model.Departamento;
 import com.Fixura.FixuraBackend.Model.Provincia;
+import com.Fixura.FixuraBackend.Model.infoMunicipalidad;
 import com.Fixura.FixuraBackend.Model.Distrito;
 import com.Fixura.FixuraBackend.Repository.Interface.IdepartamentoRepository;
 import com.Fixura.FixuraBackend.Repository.Interface.IprovinciaRepository;
@@ -72,8 +73,8 @@ public class DepartamentoService implements IdepartamentoService {
 
 
   @Override
-  public Distrito getNameDistrito(int id_distrito) {
-    Distrito distrito;
+  public infoMunicipalidad getNameDistrito(int id_distrito) {
+    infoMunicipalidad distrito;
     try{
       distrito = idistritoRepository.getNameDistrito(id_distrito);
     }catch (Exception e) {

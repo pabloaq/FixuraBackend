@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Fixura.FixuraBackend.Model.Coordenada_Distrito;
 import com.Fixura.FixuraBackend.Model.Departamento;
 import com.Fixura.FixuraBackend.Model.Provincia;
+import com.Fixura.FixuraBackend.Model.infoMunicipalidad;
 import com.Fixura.FixuraBackend.Model.Distrito;
 import com.Fixura.FixuraBackend.Service.Interface.IdepartamentoService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,7 +57,7 @@ public class DepartamentoController {
 
   
   @GetMapping("/distrito/{id_distrito}")
-  public ResponseEntity<Distrito> getDistrito(@PathVariable int id_distrito) {
+  public ResponseEntity<infoMunicipalidad> getDistrito(@PathVariable int id_distrito) {
     var result = idepartamentoService.getNameDistrito(id_distrito);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
