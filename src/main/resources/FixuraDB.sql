@@ -480,7 +480,7 @@ INSERT INTO Coordenada_Distrito (latitud, longitud, id_distrito) VALUES ( -8.079
 INSERT INTO Coordenada_Distrito (latitud, longitud, id_distrito) VALUES ( -8.079640, -79.031844, 2);
 
 INSERT INTO Usuarios VALUES ('32542163','Mario', 'Cortez',
-'ConsejoTrujillo@hotmail.com','$2a$10$B8vL0Pb3h/y9RsyVL5D9Z.sqWh6YPoS6NmV29OQy2sBjYpxp9ovRG','asdasd.jpg',NULL,1,1,NULL,true, false);
+'ConsejoTrujillo@hotmail.com','$2a$10$B8vL0Pb3h/y9RsyVL5D9Z.sqWh6YPoS6NmV29OQy2sBjYpxp9ovRG','https://raw.githubusercontent.com/KevinGM02/Galeria-Imagenes-Fixura/main/imagenes/municipalidad_trujillo.jfif',NULL,1,1,NULL,true, false);
 INSERT INTO Usuarios VALUES ('48264723','Juan', 'Rodrigues',
 'juanrodrigues@hotmail.com','$2a$10$j3OpqR.jwe83sQSUJpBzLe9XNR7ixgZdgW8KlGGSzWnhGZyfbbno2','https://raw.githubusercontent.com/KevinGM02/Galeria-Imagenes-Fixura/main/imagenes/foto_perfil_default.png',NULL,2,1,NULL,true, false);
 INSERT INTO Usuarios VALUES ('21443227','Antony', 'Lujan',
