@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.Fixura.FixuraBackend.Model.Coordenada_Distrito;
 import com.Fixura.FixuraBackend.Model.Distrito;
+import com.Fixura.FixuraBackend.Model.infoMunicipalidad;
 import com.Fixura.FixuraBackend.Repository.Interface.IdistritoRepository;
 
 @Repository
@@ -32,10 +33,13 @@ public class DistritoRepository implements IdistritoRepository{
 
   @SuppressWarnings("deprecation")
   @Override
-  public Distrito getNameDistrito(int id_distrito) {
-      String SQL = "SELECT * FROM distrito WHERE id_distrito = ?";
+  public infoMunicipalidad getNameDistrito(int id_distrito) {
+      String SQL = """
+      SELECT dis.nombre, us.foto_perfil FROM distrito as dis
+      INNER JOIN usuarios as us on us.id_distrito = dis.id_distrito
+      WHERE us.id_rol = 1 AND dis.id_distrito = ?""";
       try {
-          return jdbcTemplate.queryForObject(SQL, new Object[]{id_distrito}, BeanPropertyRowMapper.newInstance(Distrito.class));
+          return jdbcTemplate.queryForObject(SQL, new Object[]{id_distrito}, BeanPropertyRowMapper.newInstance(infoMunicipalidad.class));
       } catch (EmptyResultDataAccessException e) {
           // Devuelve null si no encuentra el distrito con el id especificado
           return null;
