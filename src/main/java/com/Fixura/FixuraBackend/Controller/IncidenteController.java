@@ -159,7 +159,7 @@ public class IncidenteController {
 		if (result == 1) {
 			serviceResponse.setMenssage("El producto se registro correctamente.");
 
-			webSocketService.enviarNotificacion("Nuevo incidente registrado");
+			webSocketService.enviarNotificacion("Nuevo incidente registrado por el usuario con numero DNI " + incidente.getDNI());
 			webSocketService.refreshIncidencias(incidente);
 		}
 
