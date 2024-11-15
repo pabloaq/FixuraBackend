@@ -12,7 +12,8 @@ public class infoIncidente {
     String imagen;
     int total_votos;
     String estado;
-    String usuario;
+    String usuarioFirstName;
+    String usuarioLastName;
     String usuario_foto;
     String categoria;
     Double latitud;
