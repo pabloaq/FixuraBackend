@@ -34,7 +34,7 @@ public class IncidenteRepository implements IincidenteRepository{
 	}
 	@Override
 	public infoIncidente Listar_incidente_porID(int id_incidente) {
-		String sql = "select incidencia.id_incidencia,incidencia.fecha_publicacion,incidencia.descripcion,incidencia.ubicacion,incidencia.imagen,incidencia.total_votos,estado.nombre as estado,usuarios.nombre as usuario,categoria.nombre as categoria,incidencia.latitud,incidencia.longitud from Incidencia inner join usuarios on incidencia.dni=usuarios.dni inner join estado on estado.id_estado=incidencia.id_estado inner join categoria on categoria.id_categoria=incidencia.id_categoria where id_incidencia=?";
+		String sql = "select incidencia.id_incidencia,incidencia.fecha_publicacion,incidencia.descripcion,incidencia.ubicacion,incidencia.imagen,incidencia.total_votos,estado.nombre as estado,usuarios.nombre as usuarioFirstName,usuarios.apellido as usuarioLastName,categoria.nombre as categoria,incidencia.latitud,incidencia.longitud,usuarios.foto_perfil as usuario_foto from Incidencia inner join usuarios on incidencia.dni=usuarios.dni inner join estado on estado.id_estado=incidencia.id_estado inner join categoria on categoria.id_categoria=incidencia.id_categoria where id_incidencia=?";
 		return jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(infoIncidente.class), id_incidente);
 	}
 
