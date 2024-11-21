@@ -175,12 +175,12 @@ public class IncidenteRepository implements IincidenteRepository{
 	}
 	@Override
 	public List<IncidentesCoordenada> Listar_coordenadas_incidentes_Municipalidad(int distrito) {
-		String sql = "select id_incidencia,latitud,longitud from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito="+distrito+" AND Incidencia.id_estado <> 4 AND latitud is not null AND longitud is not null";
+		String sql = "select id_incidencia,latitud,longitud,id_categoria from Incidencia inner join Usuarios on Incidencia.DNI=Usuarios.DNI where Usuarios.id_distrito="+distrito+" AND Incidencia.id_estado <> 4 AND latitud is not null AND longitud is not null";
 		return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(IncidentesCoordenada.class));
 	}
 	@Override
 	public IncidentesCoordenada Listar_Coordenada_Incidente(int id_incidencia) {
-		String sql = "select id_incidencia, latitud, longitud from incidencia where id_incidencia = ?";
+		String sql = "select id_incidencia, latitud, longitud,id_categoria from incidencia where id_incidencia = ?";
 		return jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(IncidentesCoordenada.class), id_incidencia);
 	}
 	@Override
