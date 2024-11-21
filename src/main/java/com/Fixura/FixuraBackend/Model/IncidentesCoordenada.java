@@ -6,4 +6,5 @@ public class IncidentesCoordenada {
     int id_incidencia;
     double latitud;
     double longitud;
+    int id_categoria;
 }
